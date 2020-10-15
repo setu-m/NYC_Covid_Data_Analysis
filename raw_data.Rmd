@@ -1,0 +1,28 @@
+---
+title: "data"
+author: "Setu Mehta"
+date: "10/14/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(ggplot2)
+```
+
+```{r}
+age <- read_csv("Data/boroughs-by-age.csv", col_types = 
+                  cols(.default = col_double(),
+                       group = col_character() ))
+
+age_long <- pivot_longer(data = age, 
+                         cols = -group, 
+                         names_to = "county",
+                         values_to = "count") 
+  #mutate(type = map(county, 
+                   #  ~ str_split_fixed(., pattern = "_", n = 2)))
+map(age_long, ~ separate(data = age_long, col = county, into = c("county", "type"), sep = "_"))
+
+
+```
+
