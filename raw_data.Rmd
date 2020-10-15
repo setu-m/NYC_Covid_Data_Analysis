@@ -11,7 +11,7 @@ library(ggplot2)
 library(tidyr)
 ```
 
-```{r}
+```{r age}
 age <- read_csv("Data/boroughs-by-age.csv", col_types = 
                   cols(.default = col_double(),
                        group = col_character() ))
@@ -35,4 +35,9 @@ age_long <- pivot_longer(data = age,
 
 ```
 
+```{r 311_requests}
+
+311_data <- read_csv("Data/boroughs-by-age.csv"
+
+```
 

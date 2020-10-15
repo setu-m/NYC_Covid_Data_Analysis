@@ -1,13 +1,15 @@
 
 library(shiny) 
 library(tidyverse)
-library(fec16)
+
+
+   
 
 ui <- navbarPage(
     "NYC Covid Data",
     tabPanel("Age Data",
              fluidPage(
-                 titlePanel("Model Title"),
+                 titlePanel("Age Distribution"),
                  sidebarLayout(
                      sidebarPanel(
                          selectInput(
@@ -22,6 +24,7 @@ ui <- navbarPage(
              titlePanel("Discussion Title"),
              p("Tour of the modeling choices you made and 
               an explanation of why you made them")),
+             p(htmlOutput("about")),
     tabPanel("About", 
              titlePanel("About"),
              h3("Project Background and Motivations"),
@@ -31,6 +34,10 @@ ui <- navbarPage(
              You can reach me at setumehta@college.harvard.edu.")))
 
 server <- function(input, output) {
+    getPage<-function() {
+        return(includeHTML("about.html"))
+    }
+    output$about<-renderUI({getPage()})
     output$age_plots <- renderPlot({
         if(input$plot_type == "case") {age_long %>%
                 filter(type == "CASE") %>%

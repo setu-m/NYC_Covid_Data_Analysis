@@ -1,0 +1,17 @@
+---
+title: "About"
+author: "Setu Mehta"
+date: "10/15/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Project Trajectory
+I originally was going to work with my thesis data, however, my dataset was too large to work locally on my computer. I then tried to work with the ALS Foundation. however, they did not have enough data/bandwidth to work with me. Therefore, I pivoted to working with NYS COVID-19 data, as I am from NY and am interested in mapping trends related to COVID-19. Currently, I am interested in looking for any correlations with 311 reports for NYC social distancing violations with deaths, hospitalizations, and cases per borough in NYC. I am interested in further segmenting the data into trends by age, race, and sex. This is not set at the moment, and was dependent on the available data online.
+
+
+## Information about data
+I downloaded the ages data on 10-14-2020 from <https://github.com/nychealth/coronavirus-data>. This data contains deaths, hospitalizations, and cases of COVID-19 in NYC per age group and borough.
