@@ -8,6 +8,7 @@ output: html_document
 ```{r setup, include=FALSE}
 library(tidyverse)
 library(ggplot2)
+library(tidyr)
 ```
 
 ```{r}
@@ -15,14 +16,23 @@ age <- read_csv("Data/boroughs-by-age.csv", col_types =
                   cols(.default = col_double(),
                        group = col_character() ))
 
+# It was difficult to work this data because the intial dataset was very wide.
+# Therefore, I decided to make the data longer, whcih was difficult!
+
 age_long <- pivot_longer(data = age, 
                          cols = -group, 
                          names_to = "county",
-                         values_to = "count") 
-  #mutate(type = map(county, 
-                   #  ~ str_split_fixed(., pattern = "_", n = 2)))
-map(age_long, ~ separate(data = age_long, col = county, into = c("county", "type"), sep = "_"))
+                         values_to = "count") %>% 
+  separate(col = county, into = c("location", "type"), sep = "_", extra = "drop") %>%
+  slice(1:150)
 
+# I worked with Ishan to understand how to split the column that had both the
+# county and the type of test into two columns. I first tried to map an
+# str_split function but that did not give me the result I wanted. Then, I
+# learned about the separate function and tried to map it as well, which created
+# an error. Then, I learned that the separate function does not need a map
+# function!
 
 ```
+
 
