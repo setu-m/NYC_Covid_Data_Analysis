@@ -10,6 +10,7 @@ library(tidyverse)
 library(ggplot2)
 library(tidyr)
 library(janitor)
+library(lubridate)
 ```
 
 ```{r age}
@@ -64,7 +65,23 @@ three <- read_csv("Data/311_Service_Requests_from_2010_to_Present.csv", col_type
 
 group_three <- three %>%
   clean_names() %>%
-  group_by(location_type)
+  select(created_date, location_type, incident_zip, borough, location) %>%
+  filter(!is.na(location_type)) %>%
+  filter(!is.na(borough)) %>%
+  
+# This decision to remove the NA's in the location_type column was just made to
+# make the graph look better. I will need to reevaluate this decision in my
+# final project.
+  
+  group_by(location_type, borough) %>%
+  summarize(count = n(), .groups = "drop") %>%
+  ggplot(aes(x = location_type, y = count, fill = borough)) +
+  geom_col(position = "dodge") +
+  coord_flip() +
+  labs(title = "Amount of Social Distancing Violations per
+       Location and Borough")
+
+
   
 ```
 

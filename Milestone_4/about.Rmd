@@ -12,7 +12,7 @@ I originally was going to work with my thesis data, however, my dataset was too 
 
 
 ## Information about data
-I downloaded the ages data on 10-14-2020 from <https://github.com/nychealth/coronavirus-data>. This data contains deaths, hospitalizations, and cases of COVID-19 in NYC per age group and borough.
+I downloaded the ages data on 10-14-2020 from <https://github.com/nychealth/coronavirus-data>. This data contains deaths, hospitalizations, and cases of COVID-19 in NYC per age group and borough. I downloaded the 311 data from the NYC website at <https://data.cityofnewyork.us/Social-Services/Social-Distancing-Violation-Reports-Mapped/jdvc-m64z>. 
 
 ## About Me
 My name is Setu and I study stem cell biology. You can reach me at setumehta@college.harvard.edu.

@@ -3,7 +3,7 @@ library(shiny)
 library(tidyverse)
 
 
-   
+includeMarkdown("raw_data.Rmd")   
 
 ui <- navbarPage(
     "NYC Covid Data",
@@ -18,14 +18,16 @@ ui <- navbarPage(
                              c("Cases" = "case", "Hospitalized" = "hosp",
                                "Death" = "death")
                          )),
-                     mainPanel(plotOutput("age_plots")))
+                     mainPanel(plotOutput("age_plots"),
+                               plotOutput("three")))
+                               
              )),
     tabPanel("Discussion",
              titlePanel("Discussion Title"),
              p("Tour of the modeling choices you made and 
               an explanation of why you made them")),
     tabPanel("About", 
-             includeHTML("../about.html")))
+             includeHTML("about.html")))
              
              
 
@@ -55,6 +57,7 @@ server <- function(input, output) {
          }
         
     })
+    output$three <- renderPlot({group_three})
             
         
 }
