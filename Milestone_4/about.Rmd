@@ -12,8 +12,11 @@ I originally was going to work with my thesis data, however, my dataset was too 
 
 
 ## Information about data
-My code is part of this repo: <https://github.com/setu-m/milestone4.git.>
-I downloaded the ages data on 10-14-2020 from <https://github.com/nychealth/coronavirus-data>. This data contains deaths, hospitalizations, and cases of COVID-19 in NYC per age group and borough. I downloaded the 311 data from the NYC website at <https://data.cityofnewyork.us/Social-Services/Social-Distancing-Violation-Reports-Mapped/jdvc-m64z>. 
+My code is part of this repo: <https://github.com/setu-m/milestone4.git>.
+I downloaded the ages data that I graphed on 10-14-2020 from <https://github.com/nychealth/coronavirus-data>. This data contains deaths, hospitalizations, and cases due to COVID-19 in NYC per age group and borough. I downloaded the 311 violations data from the NYC website on 10-14-2020 from <https://data.cityofnewyork.us/Social-Services/Social-Distancing-Violation-Reports-Mapped/jdvc-m64z>. I downloaded a filtered dataset from this site that just had social distancing violations in the past year.  
+
+## Plans
+I plan to continue exploring the various datasets available from the downloaded New York City COVID-19 data, which segments the data by race, and sex. I will also organize my repo to make it more intuitive to explore and understand for the user. The 311 data also has geographical data so I will explore mapping the data to a location graph. I will also explore other related datasets to COVID-19 in NYC, such as social distancing policies, or change in legislation, that could also impact deaths, hospitalizations, and cases of COVID-19. 
 
 ## About Me
 My name is Setu and I study stem cell biology. You can reach me at setumehta@college.harvard.edu.
