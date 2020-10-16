@@ -3,9 +3,11 @@ library(shiny)
 library(tidyverse)
 library(knitr)
 
+# Loading in my data
+
 # source("raw_data.R")
 age_long <- readRDS("age_long.RDS")
-three <- readRDS("three.RDS")
+group_three <- readRDS("group_three.RDS")
 
 ui <- navbarPage(
     "NYC Covid Data",
@@ -36,20 +38,20 @@ ui <- navbarPage(
 server <- function(input, output) {
     output$age_plots <- renderPlot({
         if(input$plot_type == "case") {age_long %>%
-                filter(type == "CASE") %>%
+                filter(type == "CASE_COUNT") %>%
                 ggplot(aes(x = group, y = av, fill = location)) +
                 geom_col(position = "dodge") +
                 theme_bw() +
                 labs(title = "Covid Cases per age group per NYC county")
         } else{if(input$plot_type == "hosp") {age_long %>%
-                filter(type == "HOSPITALIZED") %>%
+                filter(type == "HOSPITALIZED_COUNT") %>%
                 ggplot(aes(x = group, y = av, fill = location)) +
                 geom_col(position = "dodge") +
                 theme_bw() +
-                labs(title = "Hospitalizations Cases per 
+                labs(title = "Hospitalizations Cases per
                      age group per NYC county")}
          else {age_long %>%
-                filter(type == "DEATH") %>%
+                filter(type == "DEATH_COUNT") %>%
                 ggplot(aes(x = group, y = av, fill = location)) +
                 geom_col(position = "dodge") +
                 theme_bw() +
