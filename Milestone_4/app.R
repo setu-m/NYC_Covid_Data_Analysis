@@ -3,7 +3,9 @@ library(shiny)
 library(tidyverse)
 library(knitr)
 
-source("raw_data.R")
+# source("raw_data.R")
+age_long <- readRDS("age_long.RDS")
+three <- readRDS("three.RDS")
 
 ui <- navbarPage(
     "NYC Covid Data",

@@ -12,6 +12,8 @@ library(lubridate)
 age <- read_csv("Data/boroughs-by-age.csv", col_types = 
                   cols(.default = col_double(),
                        group = col_character() ))
+  
+saveRDS(age, file = "age.RDS")
 
 # It was difficult to work this data because the intial dataset was very wide.
 # Therefore, I decided to make the data longer, whcih was difficult!
