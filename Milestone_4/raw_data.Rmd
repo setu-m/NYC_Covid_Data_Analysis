@@ -6,15 +6,14 @@ library(ggplot2)
 library(tidyr)
 library(janitor)
 library(lubridate)
+
 ```
 
 ```{r age, echo = FALSE}
-age <- read_csv("Data/boroughs-by-age.csv", col_types = 
-                  cols(.default = col_double(),
-                       group = col_character() ))
+age <- read_csv("Milestone_4/Data/boroughs-by-age.csv",
+      col_types = cols(.default = col_double(),
+                       group = col_character()))
   
-saveRDS(age, file = "age.RDS")
-
 # It was difficult to work this data because the intial dataset was very wide.
 # Therefore, I decided to make the data longer, whcih was difficult!
 
@@ -22,11 +21,13 @@ age_long <- pivot_longer(data = age,
                          cols = -group, 
                          names_to = "county",
                          values_to = "count") %>% 
-  separate(col = county, into = c("location", "type"), sep = "_", extra = "drop") %>%
+  separate(col = county, into = c("location", "type"), sep = "_", extra = "merge") %>%
   slice(1:150) %>%
   group_by(group, type, location) %>%
   summarize(av = mean(count), .groups = "drop") %>%
   arrange(location)
+
+# Originally, I set extra = drop as I was getting an error. This error was occuring because there were multiple words separated by "_". By dropping the rest of the information past the first "_", I realized that I was losing valuable information. Using extra = merge will display all of the latter information and help me preserve crucial data.
 
 # I worked with Ishan to understand how to split the column that had both the
 # county and the type of test into two columns. I first tried to map an
@@ -35,7 +36,7 @@ age_long <- pivot_longer(data = age,
 # an error. Then, I learned that the separate function does not need a map
 # function!
 
-
+saveRDS(age_long, file = "Milestone_4/age_long.RDS")
 
 
 
@@ -43,7 +44,7 @@ age_long <- pivot_longer(data = age,
 
 ```{r 311_requests, echo = FALSE}
 
-three <- read_csv("Data/311_Service_Requests_from_2010_to_Present.csv", col_types = cols(
+three <- read_csv("Milestone_4/Data/311_Service_Requests_from_2010_to_Present.csv", col_types = cols(
   .default = col_character(),
   `Unique Key` = col_double(),
   `Incident Zip` = col_double(),
@@ -82,7 +83,7 @@ group_three <- three %>%
   labs(title = "Amount of Social Distancing Violations per
        Location and Borough")
 
-
+saveRDS(group_three, file = "Milestone_4/group_three.RDS")
   
 ```
 
