@@ -1,9 +1,9 @@
 
 library(shiny) 
 library(tidyverse)
+library(knitr)
 
-
-includeMarkdown("raw_data.Rmd")   
+source("raw_data.R")
 
 ui <- navbarPage(
     "NYC Covid Data",

@@ -379,26 +379,7 @@ summary {
 </div>
 
 
-<pre class="r"><code>age &lt;- read_csv(&quot;Data/boroughs-by-age.csv&quot;, col_types = 
-                  cols(.default = col_double(),
-                       group = col_character() ))
 
-# It was difficult to work this data because the intial dataset was very wide.
-# Therefore, I decided to make the data longer, whcih was difficult!
-
-age_long &lt;- pivot_longer(data = age, 
-                         cols = -group, 
-                         names_to = &quot;county&quot;,
-                         values_to = &quot;count&quot;) %&gt;% 
-  separate(col = county, into = c(&quot;location&quot;, &quot;type&quot;), sep = &quot;_&quot;, extra = &quot;drop&quot;) %&gt;%
-  slice(1:150)
-
-# I worked with Ishan to understand how to split the column that had both the
-# county and the type of test into two columns. I first tried to map an
-# str_split function but that did not give me the result I wanted. Then, I
-# learned about the separate function and tried to map it as well, which created
-# an error. Then, I learned that the separate function does not need a map
-# function!</code></pre>
 
 
 

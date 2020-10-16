@@ -1,14 +1,10 @@
----
-
-```{r setup, include=FALSE}
 library(tidyverse)
 library(ggplot2)
 library(tidyr)
 library(janitor)
 library(lubridate)
-```
 
-```{r age, echo = FALSE}
+
 age <- read_csv("Data/boroughs-by-age.csv", col_types = 
                   cols(.default = col_double(),
                        group = col_character() ))
@@ -32,14 +28,6 @@ age_long <- pivot_longer(data = age,
 # learned about the separate function and tried to map it as well, which created
 # an error. Then, I learned that the separate function does not need a map
 # function!
-
-
-
-
-
-```
-
-```{r 311_requests, echo = FALSE}
 
 three <- read_csv("Data/311_Service_Requests_from_2010_to_Present.csv", col_types = cols(
   .default = col_character(),
@@ -68,9 +56,9 @@ group_three <- three %>%
   filter(!is.na(location_type)) %>%
   filter(!is.na(borough)) %>%
   
-# This decision to remove the NA's in the location_type column was just made to
-# make the graph look better. I will need to reevaluate this decision in my
-# final project.
+  # This decision to remove the NA's in the location_type column was just made to
+  # make the graph look better. I will need to reevaluate this decision in my
+  # final project.
   
   group_by(location_type, borough) %>%
   summarize(count = n(), .groups = "drop") %>%
@@ -79,8 +67,4 @@ group_three <- three %>%
   coord_flip() +
   labs(title = "Amount of Social Distancing Violations per
        Location and Borough")
-
-
-  
-```
 
