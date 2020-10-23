@@ -3,6 +3,7 @@ library(shiny)
 library(tidyverse)
 library(knitr)
 library(shinythemes)
+library(ggplot2)
 
 # Loading in my data
 
