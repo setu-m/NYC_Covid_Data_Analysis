@@ -19,7 +19,6 @@ ui <- navbarPage(
     theme = shinytheme("journal"),
     tabPanel("Age Data",
              fluidPage(
-                 theme = shinytheme("cerulean"),
                  titlePanel("Age Distribution"),
                  sidebarLayout(
                      sidebarPanel(
@@ -35,20 +34,37 @@ ui <- navbarPage(
                              choices = c("Race", "Age", "Sex")     
                          )),
                      mainPanel(plotOutput("age_plots"),
-                               plotOutput("three")))
+                               p("There is a relationship with age and the 
+                               various counts. I will need to decide how I want
+                               to display these relationships."),
+                               ))
                                
+             )),
+    tabPanel("311 Data",
+             tabsetPanel(
+                 
+                # 1st tab: Graph of 311 Data
+                 tabPanel("311 Graphs",
+                          plotOutput("three")
+                 ),
+                 tabPanel("311 Map")
              )),
     tabPanel("Discussion",
              titlePanel("Discussion Title"),
              p("Tour of the modeling choices you made and 
               an explanation of why you made them")),
     tabPanel("About",
-             includeHTML("about.html")))
+             includeHTML("about.html")
+             ))
+
              
              
 
 server <- function(input, output) {
-    output$age_plots <- renderPlot({
+   
+# Generating the age plots
+    
+     output$age_plots <- renderPlot({
         if(input$plot_type == "case") {age_long %>%
                 filter(type == "CASE_COUNT") %>%
                 ggplot(aes(x = group, y = av, fill = location)) +
