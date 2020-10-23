@@ -2,17 +2,24 @@
 library(shiny) 
 library(tidyverse)
 library(knitr)
+library(shinythemes)
 
 # Loading in my data
 
 # source("raw_data.R")
 age_long <- readRDS("age_long.RDS")
 group_three <- readRDS("group_three.RDS")
+race_long <- readRDS("race_long.RDS")
+sex_long <- readRDS("sex_long.RDS")
+joined_data <- readRDS("joined_data.RDS")
+
 
 ui <- navbarPage(
     "NYC Covid Data",
+    theme = shinytheme("journal"),
     tabPanel("Age Data",
              fluidPage(
+                 theme = shinytheme("cerulean"),
                  titlePanel("Age Distribution"),
                  sidebarLayout(
                      sidebarPanel(
@@ -21,6 +28,11 @@ ui <- navbarPage(
                              "Plot Type",
                              c("Cases" = "case", "Hospitalized" = "hosp",
                                "Death" = "death")
+                         ),
+                         radioButtons(
+                             inputId = "selected_variable",            
+                             label = "Choose Race, Age, or Sex!",             
+                             choices = c("Race", "Age", "Sex")     
                          )),
                      mainPanel(plotOutput("age_plots"),
                                plotOutput("three")))
@@ -30,7 +42,7 @@ ui <- navbarPage(
              titlePanel("Discussion Title"),
              p("Tour of the modeling choices you made and 
               an explanation of why you made them")),
-    tabPanel("About", 
+    tabPanel("About",
              includeHTML("about.html")))
              
              
@@ -42,7 +54,9 @@ server <- function(input, output) {
                 ggplot(aes(x = group, y = av, fill = location)) +
                 geom_col(position = "dodge") +
                 theme_bw() +
-                labs(title = "Covid Cases per age group per NYC county")
+                labs(title = "Covid Cases per age group per NYC county",
+                     x = "Age Groups",
+                     y = "Count") 
         } else{if(input$plot_type == "hosp") {age_long %>%
                 filter(type == "HOSPITALIZED_COUNT") %>%
                 ggplot(aes(x = group, y = av, fill = location)) +

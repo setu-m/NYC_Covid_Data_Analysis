@@ -1,3 +1,4 @@
+
 ---
 
 ```{r setup, include=FALSE}
@@ -10,7 +11,7 @@ library(lubridate)
 ```
 
 ```{r age, echo = FALSE}
-age <- read_csv("Milestone_4/Data/boroughs-by-age.csv",
+age <- read_csv("Data/boroughs-by-age.csv",
       col_types = cols(.default = col_double(),
                        group = col_character()))
   
@@ -27,7 +28,11 @@ age_long <- pivot_longer(data = age,
   summarize(av = mean(count), .groups = "drop") %>%
   arrange(location)
 
-# Originally, I set extra = drop as I was getting an error. This error was occuring because there were multiple words separated by "_". By dropping the rest of the information past the first "_", I realized that I was losing valuable information. Using extra = merge will display all of the latter information and help me preserve crucial data.
+# Originally, I set extra = drop as I was getting an error. This error was
+# occurring because there were multiple words separated by "_". By dropping the
+# rest of the information past the first "_", I realized that I was losing
+# valuable information. Using extra = merge will display all of the latter
+# information and help me preserve crucial data.
 
 # I worked with Ishan to understand how to split the column that had both the
 # county and the type of test into two columns. I first tried to map an
@@ -36,11 +41,58 @@ age_long <- pivot_longer(data = age,
 # an error. Then, I learned that the separate function does not need a map
 # function!
 
-saveRDS(age_long, file = "Milestone_4/age_long.RDS")
+saveRDS(age_long, file = "age_long.RDS")
 
 
 
 ```
+
+```{r race, echo = FALSE}
+
+sex <- read_csv("Data/boroughs-by-sex.csv",
+      col_types = cols(.default = col_double(),
+                       group = col_character()))
+  
+sex_long <- pivot_longer(data = sex, 
+                         cols = -group, 
+                         names_to = "county",
+                         values_to = "count") %>% 
+  separate(col = county, into = c("location", "type"), sep = "_", extra = "merge") %>%
+  filter(group != "Boroughwide") %>%
+  group_by(group, type, location) %>%
+  summarize(av = mean(count), .groups = "drop") 
+
+saveRDS(sex_long, file = "sex_long.RDS")
+
+```
+
+```{r}
+
+race <- read_csv("Data/boroughs-by-race.csv",
+      col_types = cols(.default = col_double(),
+                       group = col_character()))
+  
+race_long <- pivot_longer(data = race, 
+                         cols = -group, 
+                         names_to = "county",
+                         values_to = "count") %>% 
+  separate(col = county, into = c("location", "type"), sep = "_", extra = "merge") %>%
+  group_by(group, type, location) %>%
+  summarize(av = mean(count), .groups = "drop")
+
+saveRDS(race_long, file = "race_long.RDS")
+
+```
+
+```{r merge}
+
+joined_data <- full_join(age_long, race_long, by = c("group", "type", "location", "av")) %>%
+  full_join(sex_long, by = c("group", "type", "location", "av"))
+
+saveRDS(joined_data, file = "joined_data.RDS")
+
+```
+
 
 ```{r 311_requests, echo = FALSE}
 
