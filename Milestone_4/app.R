@@ -56,21 +56,39 @@ server <- function(input, output) {
                 theme_bw() +
                 labs(title = "Covid Cases per age group per NYC county",
                      x = "Age Groups",
-                     y = "Count") 
+                     y = "Count") +
+                scale_fill_manual(name = "County",
+                                  breaks = c("BK", "BX", "MN", "QN", "SI"),
+                                  labels = c("Brooklyn", "Bronx", "Manhattan",
+                                              "Queens", "Staten Island"),
+                                  values = c("#1D2F6F", "#8390fa", "#fac748",
+                                      "#f9e9ec", "#f88dad"))
         } else{if(input$plot_type == "hosp") {age_long %>%
                 filter(type == "HOSPITALIZED_COUNT") %>%
                 ggplot(aes(x = group, y = av, fill = location)) +
                 geom_col(position = "dodge") +
                 theme_bw() +
                 labs(title = "Hospitalizations Cases per
-                     age group per NYC county")}
+                     age group per NYC county") +
+                scale_fill_manual(name = "County",
+                                  breaks = c("BK", "BX", "MN", "QN", "SI"),
+                                  labels = c("Brooklyn", "Bronx", "Manhattan",
+                                             "Queens", "Staten Island"),
+                                  values = c("#1D2F6F", "#8390fa", "#fac748",
+                                             "#f9e9ec", "#f88dad"))}
          else {age_long %>%
                 filter(type == "DEATH_COUNT") %>%
                 ggplot(aes(x = group, y = av, fill = location)) +
                 geom_col(position = "dodge") +
                 theme_bw() +
                 labs(title = "Deaths Cases per 
-                     age group per NYC county")}
+                     age group per NYC county") +
+                 scale_fill_manual(name = "County",
+                                   breaks = c("BK", "BX", "MN", "QN", "SI"),
+                                   labels = c("Brooklyn", "Bronx", "Manhattan",
+                                              "Queens", "Staten Island"),
+                                   values = c("#1D2F6F", "#8390fa", "#fac748",
+                                              "#f9e9ec", "#f88dad"))}
             
          }
         
