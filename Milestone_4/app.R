@@ -16,8 +16,8 @@ joined_data <- readRDS("joined_data.RDS")
 
 
 ui <- navbarPage(
-    "NYC Covid Data",
     theme = shinytheme("journal"),
+    "NYC Covid Data",
     tabPanel("Age Data",
              fluidPage(
                  titlePanel("Age Distribution"),
