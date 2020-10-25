@@ -55,7 +55,7 @@ ui <- navbarPage(
              p("Tour of the modeling choices you made and 
               an explanation of why you made them")),
     tabPanel("About",
-             includeHTML("about.html")
+             includeHTML(rmarkdown::render("About.Rmd"))
              ))
 
              
