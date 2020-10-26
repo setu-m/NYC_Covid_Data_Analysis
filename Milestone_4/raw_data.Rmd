@@ -16,7 +16,7 @@ age <- read_csv("Data/boroughs-by-age.csv",
                        group = col_character()))
   
 # It was difficult to work this data because the intial dataset was very wide.
-# Therefore, I decided to make the data longer, whcih was difficult!
+# Therefore, I decided to make the data longer, which was difficult!
 
 age_long <- pivot_longer(data = age, 
                          cols = -group, 
@@ -26,7 +26,8 @@ age_long <- pivot_longer(data = age,
   slice(1:150) %>%
   group_by(group, type, location) %>%
   summarize(av = mean(count), .groups = "drop") %>%
-  arrange(location)
+  arrange(location) %>%
+  mutate(selected_variable = rep("age", 150))
 
 # Originally, I set extra = drop as I was getting an error. This error was
 # occurring because there were multiple words separated by "_". By dropping the
@@ -60,7 +61,8 @@ sex_long <- pivot_longer(data = sex,
   separate(col = county, into = c("location", "type"), sep = "_", extra = "merge") %>%
   filter(group != "Boroughwide") %>%
   group_by(group, type, location) %>%
-  summarize(av = mean(count), .groups = "drop") 
+  summarize(av = mean(count), .groups = "drop") %>%
+  mutate(selected_variable = rep("sex", 60))
 
 saveRDS(sex_long, file = "sex_long.RDS")
 
@@ -78,7 +80,8 @@ race_long <- pivot_longer(data = race,
                          values_to = "count") %>% 
   separate(col = county, into = c("location", "type"), sep = "_", extra = "merge") %>%
   group_by(group, type, location) %>%
-  summarize(av = mean(count), .groups = "drop")
+  summarize(av = mean(count), .groups = "drop") %>%
+  mutate(selected_variable = rep("race", 120))
 
 saveRDS(race_long, file = "race_long.RDS")
 
@@ -86,8 +89,14 @@ saveRDS(race_long, file = "race_long.RDS")
 
 ```{r merge}
 
-joined_data <- full_join(age_long, race_long, by = c("group", "type", "location", "av")) %>%
-  full_join(sex_long, by = c("group", "type", "location", "av"))
+joined_data <- full_join(age_long, race_long, by = c("group", "type", "location", "av", "selected_variable")) %>%
+  full_join(sex_long, by = c("group", "type", "location", "av", "selected_variable")) %>%
+  mutate(type = case_when(type == "CASE_COUNT" ~ "case",
+                          type == "DEATH_COUNT" ~ "death",
+                          type == "HOSPITALIZED_COUNT" ~ 
+                            "hosp",
+                          TRUE ~ type))
+  
 
 saveRDS(joined_data, file = "joined_data.RDS")
 
