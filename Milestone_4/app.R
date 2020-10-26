@@ -72,7 +72,7 @@ server <- function(input, output) {
              ggplot(aes(x = group, y = av, fill = location)) +
                      geom_col(position = "dodge") +
                      theme_bw() +
-             ggtitle(paste0("Covid ", input$plot_type, "s")) +
+             ggtitle(paste0("Covid ", input$plot_type, "s per ", input$selected_variable)) +
                      labs(
                           x = "Age Groups",
                           y = "Count") +
