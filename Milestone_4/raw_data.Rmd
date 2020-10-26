@@ -91,11 +91,16 @@ saveRDS(race_long, file = "race_long.RDS")
 
 joined_data <- full_join(age_long, race_long, by = c("group", "type", "location", "av", "selected_variable")) %>%
   full_join(sex_long, by = c("group", "type", "location", "av", "selected_variable")) %>%
-  mutate(type = case_when(type == "CASE_COUNT" ~ "case",
-                          type == "DEATH_COUNT" ~ "death",
+  mutate(type = case_when(type == "CASE_COUNT" ~ "Case",
+                          type == "DEATH_COUNT" ~ "Death",
                           type == "HOSPITALIZED_COUNT" ~ 
-                            "hosp",
-                          TRUE ~ type))
+                            "Hospitalization",
+                          TRUE ~ type)) %>%
+  mutate(selected_variable = case_when(selected_variable == "age" ~ "Age",
+                          selected_variable == "race" ~ "Race",
+                          selected_variable == "sex" ~ 
+                            "Sex",
+                          TRUE ~ selected_variable))
   
 
 saveRDS(joined_data, file = "joined_data.RDS")

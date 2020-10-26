@@ -26,13 +26,13 @@ ui <- navbarPage(
                          selectInput(
                              "plot_type",
                              "Outcome Type",
-                             c("Cases" = "case", "Hospitalized" = "hosp",
-                               "Death" = "death")
+                             c("Cases" = "Case", "Hospitalized" = "Hospitalization",
+                               "Death" = "Death")
                          ),
                          radioButtons(
                              inputId = "selected_variable",            
                              label = "Choose Race, Age, or Sex!",             
-                             choices = c("race", "age", "sex")     
+                             choices = c("Race", "Age", "Sex")     
                          )),
                      mainPanel(plotOutput("age_plots"),
                                p("There is a relationship with age and the 
