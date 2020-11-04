@@ -74,7 +74,7 @@ server <- function(input, output) {
                      theme_bw() +
              ggtitle(paste0("Covid ", input$plot_type, "s per ", input$selected_variable)) +
                      labs(
-                          x = "Age Groups",
+                          x = paste0(input$selected_variable),
                           y = "Count") +
                      scale_fill_manual(name = "County",
                                        breaks = c("BK", "BX", "MN", "QN", "SI"),
