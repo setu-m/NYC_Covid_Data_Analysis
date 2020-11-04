@@ -102,6 +102,13 @@ joined_data <- full_join(age_long, race_long, by = c("group", "type", "location"
                             "Sex",
                           TRUE ~ selected_variable))
   
+# I decided to make and format the joined dataset in this manner so it was easy
+# to link the UI to the dataset. In the UI, I have the user select either race,
+# age, or sex. That is why the joined dataset has another column,
+# selected_variable, to indicate that choice. I then wanted to subset each data
+# to display the various groups in the graph, which is why I have the groups
+# column. Then, I could use a dodged plot to display the varying data per
+# county.
 
 saveRDS(joined_data, file = "joined_data.RDS")
 
