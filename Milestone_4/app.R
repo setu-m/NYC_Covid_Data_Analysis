@@ -18,14 +18,14 @@ joined_data <- readRDS("joined_data.RDS")
 ui <- navbarPage(
     theme = shinytheme("journal"),
     "NYC Covid Data",
-    tabPanel("Age Data",
+    tabPanel("Data by Category",
              fluidPage(
-                 titlePanel("Age Distribution"),
+                 titlePanel("COVID-Factors"),
                  sidebarLayout(
                      sidebarPanel(
                          selectInput(
                              "plot_type",
-                             "Outcome Type",
+                             "Chose Cases, Hospitalized, or Death",
                              c("Cases" = "Case", "Hospitalized" = "Hospitalization",
                                "Death" = "Death")
                          ),
@@ -35,9 +35,8 @@ ui <- navbarPage(
                              choices = c("Race", "Age", "Sex")     
                          )),
                      mainPanel(plotOutput("age_plots"),
-                               p("There is a relationship with age and the 
-                               various counts. I will need to decide how I want
-                               to display these relationships."),
+                               p("There is a relationship with the factors and the 
+                               various counts. I will need to normalize my y-axis."),
                                ))
                                
              )),
