@@ -7,12 +7,12 @@ library(ggplot2)
 
 # Loading in my data
 
-# source("raw_data.R")
-age_long <- readRDS("age_long.RDS")
-group_three <- readRDS("group_three.RDS")
-race_long <- readRDS("race_long.RDS")
-sex_long <- readRDS("sex_long.RDS")
-joined_data <- readRDS("joined_data.RDS")
+
+age_long <- readRDS("processed_data/age_long.RDS")
+group_three <- readRDS("processed_data/group_three.RDS")
+race_long <- readRDS("processed_data/race_long.RDS")
+sex_long <- readRDS("processed_data/sex_long.RDS")
+joined_data <- readRDS("processed_data/joined_data.RDS")
 
 
 ui <- navbarPage(
@@ -62,7 +62,7 @@ ui <- navbarPage(
 
 server <- function(input, output) {
    
-# Generating the age plots
+# Generating the variable plots
     
      output$age_plots <- renderPlot({
          joined_data %>%

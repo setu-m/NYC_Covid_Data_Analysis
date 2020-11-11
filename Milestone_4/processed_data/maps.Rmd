@@ -1,0 +1,29 @@
+---
+title: "Maps"
+author: "Setu Mehta"
+date: "11/11/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggmap)
+library(gganimate)
+library(ggthemes)
+library(tidyverse)
+```
+
+```{r}
+
+ggmap::register_google(key = "AIzaSyBGSUKmrJ1lBrMpesiMZpK_qOxHbtspML4")
+
+map <- get_map(location = "Xalapa", zoom = 10, source = "google", maptype = "roadmap")  
+ggmap(map, fullpage = TRUE)  
+get_googlemap("waco texas", zoom = 12) %>% ggmap()
+
+p <- ggmap(get_googlemap(center = c(lon = -122.43, lat = 37.76),
+                    zoom = 12, scale = 2, size = c(640,640),
+                    maptype ='roadmap',
+                    color = 'color'))
+```
+
