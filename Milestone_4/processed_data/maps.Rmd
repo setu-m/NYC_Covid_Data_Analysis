@@ -40,21 +40,28 @@ sd <- read_csv("../Data/311_Service_Requests_from_2010_to_Present.csv",
   clean_names() %>%
   select(latitude, longitude, borough, location_type, closed_date)
 
-
-
 ggmap::register_google(key = "AIzaSyBGSUKmrJ1lBrMpesiMZpK_qOxHbtspML4")
 
 # Will create a map of NYC
 
 
-p <- ggmap(get_googlemap(center = c(lat = 40.730610, lon = -73.935242),
-                    zoom = 10, scale = 2, size = c(640,640),
+p <- ggmap(get_googlemap(center = c(lon = -73.935242, lat = 40.730610),
+                    zoom = 12, scale = 2, size = c(640,640),
                     maptype = 'roadmap',
+                    color = 'color'))
+
+l <- ggmap(get_googlemap(center = c(lon = -122.43, lat = 37.76),
+                    zoom = 12, scale = 2, size = c(640,640),
+                    maptype ='roadmap',
                     color = 'color'))
 
 # Will plot social distancing violations into map
 
-graphic_sd <- p + geom_point(aes(x = latitude, y = longitude), data = sd, size = 0.5, alpha = .5) +
+graphic_sd <- p + geom_point(aes(x = longitude, y = latitude, color = location_type), 
+                             data = sd, 
+                             size = 0.5, 
+                             alpha = .5, 
+                             show.legend = FALSE) +
   ggthemes::theme_map(base_size = 12)
   labs(title = "San Francisco, CA Aggravated Assault with Gun Data from 2011-2017",
        subtitle = "Year: {current_frame}",
