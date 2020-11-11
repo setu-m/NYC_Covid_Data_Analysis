@@ -12,7 +12,7 @@ I am interested in looking for any correlations with 311 reports for NYC social 
 
 
 ## Information about data
-My code is part of this repo: <https://github.com/setu-m/milestone4.git>.
+My code is part of this repo: <https://github.com/setu-m/final_project>.
 I downloaded the ages data that I graphed on 10-14-2020 from <https://github.com/nychealth/coronavirus-data>. This data contains deaths, hospitalizations, and cases due to COVID-19 in NYC per age group and borough. I downloaded the 311 violations data from the NYC website on 10-14-2020 from <https://data.cityofnewyork.us/Social-Services/Social-Distancing-Violation-Reports-Mapped/jdvc-m64z>. I downloaded a filtered dataset from this site that just had social distancing violations in the past year.  
 
 ## Plans
