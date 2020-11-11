@@ -40,7 +40,7 @@ sd <- read_csv("../Data/311_Service_Requests_from_2010_to_Present.csv",
   clean_names() %>%
   select(latitude, longitude, borough, location_type, closed_date)
 
-ggmap::register_google(key = "AIzaSyBGSUKmrJ1lBrMpesiMZpK_qOxHbtspML4")
+ggmap::register_google(key = "secret")
 
 # Will create a map of NYC
 
@@ -48,11 +48,6 @@ ggmap::register_google(key = "AIzaSyBGSUKmrJ1lBrMpesiMZpK_qOxHbtspML4")
 p <- ggmap(get_googlemap(center = c(lon = -73.935242, lat = 40.730610),
                     zoom = 12, scale = 2, size = c(640,640),
                     maptype = 'roadmap',
-                    color = 'color'))
-
-l <- ggmap(get_googlemap(center = c(lon = -122.43, lat = 37.76),
-                    zoom = 12, scale = 2, size = c(640,640),
-                    maptype ='roadmap',
                     color = 'color'))
 
 # Will plot social distancing violations into map
