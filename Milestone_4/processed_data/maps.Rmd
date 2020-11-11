@@ -11,19 +11,54 @@ library(ggmap)
 library(gganimate)
 library(ggthemes)
 library(tidyverse)
+library(janitor)
 ```
 
 ```{r}
+# read in social distancing violations data
+sd <- read_csv("../Data/311_Service_Requests_from_2010_to_Present.csv", 
+               col_types = cols(
+  .default = col_character(),
+  `Unique Key` = col_double(),
+  `Incident Zip` = col_double(),
+  `Address Type` = col_logical(),
+  `Facility Type` = col_logical(),
+  `Due Date` = col_logical(),
+  BBL = col_double(),
+  `X Coordinate (State Plane)` = col_number(),
+  `Y Coordinate (State Plane)` = col_number(),
+  `Vehicle Type` = col_logical(),
+  `Taxi Company Borough` = col_logical(),
+  `Taxi Pick Up Location` = col_logical(),
+  `Bridge Highway Name` = col_logical(),
+  `Bridge Highway Direction` = col_logical(),
+  `Road Ramp` = col_logical(),
+  `Bridge Highway Segment` = col_logical(),
+  Latitude = col_double(),
+  Longitude = col_double()
+)) %>%
+  clean_names() %>%
+  select(latitude, longitude, borough, location_type, closed_date)
+
+
 
 ggmap::register_google(key = "AIzaSyBGSUKmrJ1lBrMpesiMZpK_qOxHbtspML4")
 
-map <- get_map(location = "Xalapa", zoom = 10, source = "google", maptype = "roadmap")  
-ggmap(map, fullpage = TRUE)  
-get_googlemap("waco texas", zoom = 12) %>% ggmap()
+# Will create a map of NYC
 
-p <- ggmap(get_googlemap(center = c(lon = -122.43, lat = 37.76),
-                    zoom = 12, scale = 2, size = c(640,640),
-                    maptype ='roadmap',
+
+p <- ggmap(get_googlemap(center = c(lat = 40.730610, lon = -73.935242),
+                    zoom = 10, scale = 2, size = c(640,640),
+                    maptype = 'roadmap',
                     color = 'color'))
+
+# Will plot social distancing violations into map
+
+graphic_sd <- p + geom_point(aes(x = latitude, y = longitude), data = sd, size = 0.5, alpha = .5) +
+  ggthemes::theme_map(base_size = 12)
+  labs(title = "San Francisco, CA Aggravated Assault with Gun Data from 2011-2017",
+       subtitle = "Year: {current_frame}",
+       caption = "Source: City and County of San Francisco") +
+  ggthemes::theme_map(base_size = 12)
 ```
 
