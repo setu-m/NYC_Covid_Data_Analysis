@@ -7,15 +7,16 @@ library(ggplot2)
 library(tidyr)
 library(janitor)
 library(lubridate)
+library(rstanarm)
 
 ```
 
 ```{r age, echo = FALSE}
-age <- read_csv("Data/boroughs-by-age.csv",
+age <- read_csv("../Data/boroughs-by-age.csv",
       col_types = cols(.default = col_double(),
                        group = col_character()))
   
-# It was difficult to work this data because the intial dataset was very wide.
+# It was difficult to work this data because the initial dataset was very wide.
 # Therefore, I decided to make the data longer, which was difficult!
 
 age_long <- pivot_longer(data = age, 
@@ -50,7 +51,7 @@ saveRDS(age_long, file = "age_long.RDS")
 
 ```{r race, echo = FALSE}
 
-sex <- read_csv("Data/boroughs-by-sex.csv",
+sex <- read_csv("../Data/boroughs-by-sex.csv",
       col_types = cols(.default = col_double(),
                        group = col_character()))
   
@@ -70,7 +71,7 @@ saveRDS(sex_long, file = "sex_long.RDS")
 
 ```{r race}
 
-race <- read_csv("Data/boroughs-by-race.csv",
+race <- read_csv("../Data/boroughs-by-race.csv",
       col_types = cols(.default = col_double(),
                        group = col_character()))
   
@@ -117,7 +118,7 @@ saveRDS(joined_data, file = "joined_data.RDS")
 
 ```{r 311_requests, echo = FALSE}
 
-three <- read_csv("Data/311_Service_Requests_from_2010_to_Present.csv", col_types = cols(
+three <- read_csv("../Data/311_Service_Requests_from_2010_to_Present.csv", col_types = cols(
   .default = col_character(),
   `Unique Key` = col_double(),
   `Incident Zip` = col_double(),
@@ -136,7 +137,8 @@ three <- read_csv("Data/311_Service_Requests_from_2010_to_Present.csv", col_type
   `Bridge Highway Segment` = col_logical(),
   Latitude = col_double(),
   Longitude = col_double()
-))
+)) %>%
+  clean_names()
 
 group_three <- three %>%
   clean_names() %>%
@@ -163,5 +165,77 @@ group_three <- three %>%
 
 saveRDS(group_three, file = "group_three.RDS")
   
+```
+
+```{r model}
+
+# Here I make the dataset that I will use for my model. I am relying on the granular data provided by the NYC data so I can have a greater power of my study and am going to wrangle it such that I can predict cases, hospitalizations, and deaths on borough. 
+
+date_data <- read_csv("../Data/boroughs-case-hosp-death.csv",
+                      col_types = cols(
+  DATE_OF_INTEREST = col_character(),
+  MN_CASE_COUNT = col_double(),
+  MN_HOSPITALIZED_COUNT = col_double(),
+  MN_DEATH_COUNT = col_double(),
+  QN_CASE_COUNT = col_double(),
+  QN_HOSPITALIZED_COUNT = col_double(),
+  QN_DEATH_COUNT = col_double(),
+  BK_CASE_COUNT = col_double(),
+  BK_HOSPITALIZED_COUNT = col_double(),
+  BK_DEATH_COUNT = col_double(),
+  BX_CASE_COUNT = col_double(),
+  BX_HOSPITALIZED_COUNT = col_double(),
+  BX_DEATH_COUNT = col_double(),
+  SI_CASDATE_OF_INTERESTE_COUNT = col_double(),
+  SI_HOSPITALIZED_COUNT = col_double(),
+  SI_DEATH_COUNT = col_double()
+))
+
+mn <- date_data %>%
+  select(DATE_OF_INTEREST, starts_with("MN")) %>%
+  mutate(...location = "MN") %>%
+  rename(...date = DATE_OF_INTEREST)
+
+names(mn) <- substring(names(mn), 4, 21)
+
+# Rewrite the names of the dataset to eliminate the borough indicator
+
+qn <- date_data %>%
+  select(DATE_OF_INTEREST, starts_with("QN")) %>%
+  mutate(...location = "QN") %>%
+  rename(...date = DATE_OF_INTEREST)
+
+names(qn) <- substring(names(qn), 4, 21)
+
+bk <- date_data %>%
+  select(DATE_OF_INTEREST, starts_with("BK")) %>%
+  mutate(...location = "BK") %>%
+   rename(...date = DATE_OF_INTEREST)
+
+names(bk) <- substring(names(bk), 4, 21)
+
+
+si <- date_data %>%
+  select(DATE_OF_INTEREST, starts_with("SI")) %>%
+  mutate(...location = "SI") %>%
+  rename(...date = DATE_OF_INTEREST)
+
+names(si) <- substring(names(si), 4, 21)
+
+
+bx <- date_data %>%
+  select(DATE_OF_INTEREST, starts_with("BX")) %>%
+  mutate(...location = "BX") %>%
+  rename(...date = DATE_OF_INTEREST)
+
+names(bx) <- substring(names(bx), 4, 21)
+
+# Repeating to get all of the boroughs
+
+join <- bind_rows(bx, mn, qn, si, bk) %>%
+  clean_names()
+
+# joined dataset to help me predict the model
+
 ```
 
