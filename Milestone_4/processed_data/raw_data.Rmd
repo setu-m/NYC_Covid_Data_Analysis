@@ -86,6 +86,8 @@ race_long <- pivot_longer(data = race,
 
 saveRDS(race_long, file = "race_long.RDS")
 
+# I followed the same workflow from the other section so that I could wrangle the data such that I can merge them in a way conducive to creating a dodged barplot that can be selected for various variables.
+
 ```
 
 ```{r merge}
