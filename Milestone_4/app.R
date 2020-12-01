@@ -79,6 +79,7 @@ ui <- navbarPage(
              br(),
              p("Hello"),
              includeHTML("processed_data/death_table.html"),
+             br(),
              includeHTML("processed_data/case_table.html"),
              h2("Model Implications",  style = "text-align: center; margin-left: 40px; 
              margin-right: 40px; line-height: 1.4;"),

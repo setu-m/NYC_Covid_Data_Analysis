@@ -282,7 +282,7 @@ new_join <- inner_join(join, daily_counts, by = c("date", "location")) %>%
 # I want to create a table that will infer how accurate my linear model will be
 # based on a linear predictive model. This will accompany my model information.
 
-correlations <- new_join %>%
+ correlations <- new_join %>%
   group_by(location) %>%
   summarise(case_correlation = cor(case_count, violations), hosp_correlation = cor(hospitalized_count, violations), death_correlation = cor(death_count, violations), .groups = "drop") %>%
   gt() %>%
@@ -292,8 +292,9 @@ correlations <- new_join %>%
     case_correlation = "Case Count Correlation",
     hosp_correlation = "Hospitalization Correlation",
     death_correlation = "Death Correlation") %>%
-  summary_rows(columns = TRUE,
+  summary_rows(columns = vars("case_correlation", "hosp_correlation", "death_correlation"),
     fns = list(average = "mean"))
+ 
 
 gtsave(correlations, filename = "joined_table1.html")
 
