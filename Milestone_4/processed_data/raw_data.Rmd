@@ -8,6 +8,9 @@ library(tidyr)
 library(janitor)
 library(lubridate)
 library(rstanarm)
+library(gt)
+library(gtsummary)
+library(broom.mixed)
 
 ```
 
@@ -86,7 +89,9 @@ race_long <- pivot_longer(data = race,
 
 saveRDS(race_long, file = "race_long.RDS")
 
-# I followed the same workflow from the other section so that I could wrangle the data such that I can merge them in a way conducive to creating a dodged barplot that can be selected for various variables.
+# I followed the same workflow from the other section so that I could wrangle
+# the data such that I can merge them in a way conducive to creating a dodged
+# barplot that can be selected for various variables.
 
 ```
 
@@ -148,10 +153,14 @@ group_three <- three %>%
   filter(!is.na(location_type)) %>%
   filter(!is.na(borough)) %>%
   
-# This decision to remove the NA's in the location_type column was just made to
-# make the graph look better. I will need to reevaluate this decision in my
-# final project.
+# This decision to remove the NA's in the location_type column was made to
+# make to only evaluate known locations.
   
+  mutate(location_type = case_when(location_type == "Park/Playground" ~ "Park",
+                          location_type == "Street/Sidewalk" ~ "Street",
+                          location_type == "Street/Curbside" ~ "Street",
+                          TRUE ~ location_type)) %>%
+                                   
   group_by(location_type, borough) %>%
   filter(borough != "Unspecified") %>%
   summarize(count = n(), .groups = "drop") %>%
@@ -171,7 +180,10 @@ saveRDS(group_three, file = "group_three.RDS")
 
 ```{r model}
 
-# Here I make the dataset that I will use for my model. I am relying on the granular data provided by the NYC data so I can have a greater power of my study and am going to wrangle it such that I can predict cases, hospitalizations, and deaths on borough. 
+# Here I make the dataset that I will use for my model. I am relying on the
+# granular data provided by the NYC data so I can have a greater power of my
+# study and am going to wrangle it such that I can predict cases,
+# hospitalizations, and deaths on borough.
 
 date_data <- read_csv("../Data/boroughs-case-hosp-death.csv",
                       col_types = cols(
@@ -238,6 +250,95 @@ join <- bind_rows(bx, mn, qn, si, bk) %>%
   clean_names()
 
 # joined dataset to help me predict the model
+
+# Now I want to format my three dataset for joining it with my previous
+# dataset.
+
+daily_counts <- three %>%
+  mutate(created_date = str_sub(created_date, 1, 10)) %>%
+  mutate(borough = case_when(borough == "QUEENS" ~ "QN",
+                             borough == "BRONX" ~ "BX",
+                             borough == "MANHATTAN" ~ "MN",
+                             borough == "BROOKLYN" ~ "BK",
+                             borough == "STATEN ISLAND" ~ "SI")) %>%
+  group_by(created_date, borough) %>%
+  summarize(violations = n(), .groups = "drop") %>%
+  rename(date = created_date,
+         location = borough)
+
+# This will summarize the number of social distancing violation counts per day
+# per county for merging with the other dataset.
+
+new_join <- inner_join(join, daily_counts, by = c("date", "location")) %>%
+  drop_na()
+
+# I chose to do an inner join so that I would capture only rows from both
+# datasets that were matching to avoid dropping NAs later. This inner join still
+# creates a dataset that is 734 observations long, significant enough to draw
+# conclusions from.
+
+# Now I will utilize this joined dataset to make stan_glm models.
+
+# I want to create a table that will infer how accurate my linear model will be
+# based on a linear predictive model. This will accompany my model information.
+
+correlations <- new_join %>%
+  group_by(location) %>%
+  summarise(case_correlation = cor(case_count, violations), hosp_correlation = cor(hospitalized_count, violations), death_correlation = cor(death_count, violations), .groups = "drop") %>%
+  gt() %>%
+  tab_header(title = "Coronavirus Metric Correlation with Daily Social Distancing Violations",
+    subtitle = "Arranged by Borough") %>%
+  cols_label(location = "Borough",
+    case_correlation = "Case Count Correlation",
+    hosp_correlation = "Hospitalization Correlation",
+    death_correlation = "Death Correlation") %>%
+  summary_rows(columns = TRUE,
+    fns = list(average = "mean"))
+
+gtsave(correlations, filename = "joined_table1.html")
+
+# Making a model for predicting cases
+
+fit_case <- stan_glm(data = new_join,
+                case_count ~ location + violations - 1,
+                refresh = 0)
+
+case_table <- fit_case %>%
+  tbl_regression() %>%
+  as_gt() %>%
+  tab_header(title = md("**Regression of Covid-19 Case Counts**"),
+             subtitle = "The Effect of Location and Social Distancing Violations on Covid-19 Case Counts") 
+
+gtsave(case_table, filename = "case_table.html")
+
+# Making a model for predicting hospitalizations
+
+fit_hosp <- stan_glm(data = new_join,
+                hospitalized_count ~ location + violations - 1,
+                refresh = 0)
+
+hosp_table <- fit_hosp %>%
+  tbl_regression() %>%
+  as_gt() %>%
+  tab_header(title = md("**Regression of Covid-19 Hospitalizations**"),
+             subtitle = "The Effect of Location and Social Distancing Violations on Covid-19 Hospitalizations") 
+
+gtsave(hosp_table, filename = "hospe_table.html")
+
+# Making a model for predicting deaths
+
+fit_death <- stan_glm(data = new_join,
+                death_count ~ location + violations - 1,
+                refresh = 0)
+
+death_table <- fit_death %>%
+  tbl_regression() %>%
+  as_gt() %>%
+  tab_header(title = md("**Regression of Covid-19 Deaths**"),
+             subtitle = "The Effect of Location and Social Distancing Violations on Covid-19 Deaths") 
+
+gtsave(death_table, filename = "death_table.html")
+
 
 ```
 

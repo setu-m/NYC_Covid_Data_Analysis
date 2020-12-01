@@ -49,10 +49,46 @@ ui <- navbarPage(
                  ),
                  tabPanel("311 Map")
              )),
-    tabPanel("Discussion",
-             titlePanel("Discussion Title"),
-             p("Tour of the modeling choices you made and 
-              an explanation of why you made them")),
+    tabPanel("Model",
+             h2("Model Choice",  style = "text-align: center; margin-left: 40px; 
+             margin-right: 40px; line-height: 1.4;"),
+             br(),
+             p("I chose to utilize a standard gausian model to predict
+               the number of cases, hospitalizations, and deaths based 
+               upon the predictors of location, and social distancing 
+               violations. Ultimately, I wanted to see if there was a linear
+               correlation between social distancing violation counts 
+               and hospitalizations, deaths, and cases in each borough. 
+               In order to see if there is a true linear correlation, 
+               I calculated the linear correlations between each variables,
+               displayed in the table here."),
+             br(),
+             fluidRow(
+                 includeHTML("processed_data/joined_table1.html")),
+             br(),
+             p("These correlations will put the predictions of my model in 
+               context. There are not very strong correlations between the
+               three variables and social distancing violations. However, 
+               the strongest correlations exist between social distancing
+               violations and death."),
+             br(),
+             h2("Model Per Covid Variable",  style = "text-align: center; margin-left: 40px; 
+             margin-right: 40px; line-height: 1.4;"),
+             br(),
+             includeHTML("processed_data/hospe_table.html"),
+             br(),
+             p("Hello"),
+             includeHTML("processed_data/death_table.html"),
+             includeHTML("processed_data/case_table.html"),
+             h2("Model Implications",  style = "text-align: center; margin-left: 40px; 
+             margin-right: 40px; line-height: 1.4;"),
+             p("Making this model is timely as cases are rising in New York.
+               We can use these predictive models to caution New Yorkers, 
+               especially in Brooklyn, that an increase in social distancing
+               violations may serve as a predictor of deaths. However, this model
+               also demonstrates that social distancing is just one factor
+               that impacts cases, deaths, and hospitalzations.")
+             ),
     tabPanel("About",
              includeHTML(rmarkdown::render("about.Rmd"))
              ))
