@@ -249,7 +249,7 @@ names(bx) <- substring(names(bx), 4, 21)
 join <- bind_rows(bx, mn, qn, si, bk) %>%
   clean_names()
 
-# joined dataset to help me predict the model
+# Joined dataset to help me predict the model
 
 # Now I want to format my three dataset for joining it with my previous
 # dataset.
@@ -302,7 +302,8 @@ gtsave(correlations, filename = "joined_table1.html")
 
 fit_case <- stan_glm(data = new_join,
                 case_count ~ location + violations - 1,
-                refresh = 0)
+                refresh = 0,
+                seed = 100)
 
 case_table <- fit_case %>%
   tbl_regression() %>%
