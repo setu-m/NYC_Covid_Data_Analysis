@@ -4,6 +4,7 @@ library(tidyverse)
 library(knitr)
 library(shinythemes)
 library(ggplot2)
+library(plotly)
 
 # Loading in my data
 
@@ -14,6 +15,10 @@ race_long <- readRDS("processed_data/race_long.RDS")
 sex_long <- readRDS("processed_data/sex_long.RDS")
 joined_data <- readRDS("processed_data/joined_data.RDS")
 
+# Creating an equation for my model
+
+
+# Beginning the UI
 
 ui <- navbarPage(
     theme = shinytheme("journal"),
@@ -50,8 +55,7 @@ ui <- navbarPage(
                  tabPanel("311 Map")
              )),
     tabPanel("Model",
-             h2("Model Choice",  style = "text-align: center; margin-left: 40px; 
-             margin-right: 40px; line-height: 1.4;"),
+             h2("Model Choice", style = "color: darkred"),
              br(),
              p("I chose to utilize a standard gausian model to predict
                the number of cases, hospitalizations, and deaths based 
@@ -63,26 +67,38 @@ ui <- navbarPage(
                I calculated the linear correlations between each variables,
                displayed in the table here."),
              br(),
+             p("The model will be setup according to this specification: "),
+             withMathJax(),
+             tags$div(HTML("<script type='text/x-mathjax-config' >
+            MathJax.Hub.Config({
+            tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+            });
+            </script >
+            ")),
+             helpText("$y_i = \\beta_1 location_{brooklyn, i} + \\beta_2 location_{bronx, i} + \\beta_3 location_{manhattan, i} + \\beta_4 location_{queens, i} + \\beta_5 location_{staten_island, i} + \\beta_6 violations_i + \\epsilon_i$"),
+             br(),
+             h3("Correlation Table"),
              fluidRow(
                  includeHTML("processed_data/joined_table1.html")),
              br(),
-             p("These correlations will put the predictions of my model in 
-               context. There are not very strong correlations between the
+             p("As I fit my model, I wanted to investigate the correlations between
+               the variables, and the strength of their linear correlation. 
+               I noticed that there are not very strong correlations between the
                three variables and social distancing violations. However, 
                the strongest correlations exist between social distancing
                violations and death."),
              br(),
-             h2("Model Per Covid Variable",  style = "text-align: center; margin-left: 40px; 
-             margin-right: 40px; line-height: 1.4;"),
-             br(),
+             h2("Model Per Covid Variable",  style = "color: darkred"), 
+             h3("Hospitalizations"),
              includeHTML("processed_data/hospe_table.html"),
              br(),
              p("Hello"),
+             h3("Deaths"),
              includeHTML("processed_data/death_table.html"),
              br(),
+             h3("Cases"),
              includeHTML("processed_data/case_table.html"),
-             h2("Model Implications",  style = "text-align: center; margin-left: 40px; 
-             margin-right: 40px; line-height: 1.4;"),
+             h2("Model Implications", style = "color: darkred"),
              p("Making this model is timely as cases are rising in New York.
                We can use these predictive models to caution New Yorkers, 
                especially in Brooklyn, that an increase in social distancing
@@ -95,7 +111,7 @@ ui <- navbarPage(
              ))
 
              
-             
+# Beginning the server             
 
 server <- function(input, output) {
    
