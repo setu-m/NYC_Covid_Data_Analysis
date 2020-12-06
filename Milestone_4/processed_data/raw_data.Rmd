@@ -279,8 +279,9 @@ new_join <- inner_join(join, daily_counts, by = c("date", "location")) %>%
 
 # Now I will utilize this joined dataset to make stan_glm models.
 
-# I want to create a table that will infer how accurate my linear model will be
-# based on a linear predictive model. This will accompany my model information.
+# I want to create a table that will infer how accurate my  model will be based
+# on a linear fit. Therefore, I want to see the correlations between my
+# variables. This table of correlations will accompany my model information.
 
  correlations <- new_join %>%
   group_by(location) %>%
@@ -342,5 +343,58 @@ death_table <- fit_death %>%
 gtsave(death_table, filename = "death_table.html")
 
 
+```
+
+```{r posteriors}
+
+# In order to make my model easier to understand, I would like to create
+# posterior distribution models that display the results of my models.
+
+# Because I would like to predict what the number of cases, hospitalizations,
+# and deaths would be like in the current day, I uploaded the information about
+# reported social distancing violations from November. I will summarize this
+# information per borough and will pull the highest number per borough to feed
+# through a posterior_epred function.
+
+# Reading in the November sociali distancing data
+
+recent <- read_csv("../Data/Recent.csv",
+                   col_types = cols(
+  .default = col_character(),
+  `Unique Key` = col_double(),
+  `Incident Zip` = col_double(),
+  `Address Type` = col_logical(),
+  `Facility Type` = col_logical(),
+  `Due Date` = col_logical(),
+  BBL = col_double(),
+  `X Coordinate (State Plane)` = col_number(),
+  `Y Coordinate (State Plane)` = col_number(),
+  `Vehicle Type` = col_logical(),
+  `Taxi Company Borough` = col_logical(),
+  `Taxi Pick Up Location` = col_logical(),
+  `Bridge Highway Name` = col_logical(),
+  `Bridge Highway Direction` = col_logical(),
+  `Road Ramp` = col_logical(),
+  `Bridge Highway Segment` = col_logical(),
+  Latitude = col_double(),
+  Longitude = col_double()
+)) %>%
+  clean_names() %>%
+  select(created_date, borough) %>%
+  filter(!is.na(borough)) %>%
+  mutate(created_date = str_sub(created_date, 1, 10)) %>%
+  group_by(created_date, borough) %>%
+  summarize(count = n(), .groups = "drop") %>%
+  arrange(desc(count))
+                                   
+  group_by(location_type, borough) %>%
+  filter(borough != "Unspecified") %>%
+  summarize(count = n(), .groups = "drop") 
+
+
+
+test_data <- tibble(date = c(rep("12/13/2020"), 4),
+                    location = c("BK", "BX", "MN", "SI", "QN"),
+                    violations = c(71, 14))
 ```
 
