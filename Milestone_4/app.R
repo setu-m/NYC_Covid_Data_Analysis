@@ -23,12 +23,33 @@ death_posterior <- readRDS("processed_data/death_posterior.RDS")
 ui <- navbarPage(
     theme = shinytheme("journal"),
     "Going the (Social) Distance in New York City",
-    tabPanel("Abstract"
-        
-    ),
+    tabPanel("Abstract",
+             fluidPage(
+                 
+                 # Adding some basic CSS styling to the page
+                 
+                 tags$head(tags$style(HTML("h4 {line-height: 1.6; padding-top: 5px; text-align: justify;}"))),
+                 tags$head(tags$style(HTML("h2 {padding-top: 10px; padding-bottom: 0px;}"))),
+                 
+                 br(),
+                 imageOutput("banner_image", width = "100%", height = "100%"),
+                 br(),
+                 fluidRow(
+                     column(1), column(10,
+                                       h2("Background", style = "color: darkred"),
+                                       h4("Placeholder"),
+                                       h2("Project Objectives", style = "color: darkred"),
+                                       h4("Placeholder"),
+                                       h2("Findings", style = "color: darkred"),
+                                       h4("Placeholder"),
+                                       
+                                       br(), br(), br()
+                     )
+                 )
+             )),      
     tabPanel("Data by Category",
              fluidPage(
-                 titlePanel("COVID-Factors"),
+                 titlePanel(h2("COVID-Factors", style = "color: darkred")),
                  strong("Use the selectors below to view different COVID-19 trends per borough"),
                  br(),
                  sidebarLayout(
@@ -238,6 +259,14 @@ server <- function(input, output) {
       output$hosp_posterior <- renderPlot({hosp_posterior})
       output$case_posterior <- renderPlot({case_posterior})
       output$death_posterior <- renderPlot({death_posterior})
+      
+# Creating banner image
+      
+     output$banner_image <- renderImage({
+          list(src = 'hercules.png', 
+               width = "80%",
+               style = "display: block; margin-left: auto; margin-right: auto;")}, 
+          deleteFile = FALSE)
       
 # Plots the gif of New York City Violations
     
