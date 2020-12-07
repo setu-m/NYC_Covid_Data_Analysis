@@ -47,9 +47,16 @@ ui <- navbarPage(
                      )
                  )
              )),      
+    
+    # Displaying the COVID-19 data by age, race and sex
+    
     tabPanel("Data by Category",
              fluidPage(
                  titlePanel(h2("COVID-Factors", style = "color: darkred")),
+                 br(),
+                 p("This page will showcase the various COVID related statistics per borough
+                   related to age, race, and sex. Explore these relationships
+                   below!"),
                  strong("Use the selectors below to view different COVID-19 trends per borough"),
                  br(),
                  sidebarLayout(
@@ -76,7 +83,7 @@ ui <- navbarPage(
                         in their borough. For example, the Bronx will need to 
                         address the high cases of COVID in their Latino 
                         population. Brooklyn will need to address the high hospitalizations
-                        and death count in their Black population. All counties
+                        and death count in their Black population. All boroughs
                         need to protect their elderly, as they are more likely
                         to die from COVID. One interesting trend is that Queens 
                         has a relatively high rate of hospitalizations in
@@ -93,8 +100,19 @@ ui <- navbarPage(
                 # 1st tab: Graph of 311 Data
                  
                  tabPanel("311 Graphs",
-                          plotOutput("three")
-                 ),
+                          plotOutput("three"),
+                          p("This graph plots the distribution
+                             of locations of reported social distancing violations
+                             per borough. It's clear that each borough has a different
+                             distribution of hot spots for social distancing violations.
+                             However, we can see here that stores seem to be a hotspot
+                             for violations throughout each borough. This data can serve
+                             as a partial justification for why legislation has focused on
+                             shutting down non-essential businesses. However, we must keep
+                             in mind the unreported social distancing violations, of which
+                             violations in residential buildings are the culprit for this
+                             most recent wave of COVID.")
+                          ),
                  
                  # 2nd tab: Gif of Mapped Social Distancing Violations
                  
@@ -110,9 +128,16 @@ ui <- navbarPage(
                           which occured in this past wave of COVID."),
                           column(5, imageOutput("NYC", height = "100%"))
              ))),
+    
+    # Tab describing componenets of my model
+    
     tabPanel("Model",
              tabsetPanel(
-             tabPanel("Model Choice", h2("Model Choice", style = "color: darkred"),
+             
+               # This fist tab will give the most information about the output and
+               # visualization of my model
+               
+               tabPanel("Model Choice", h2("Model Choice", style = "color: darkred"),
                  br(),
                  p("I chose to utilize a standard gaussian model to predict
                    the number of cases, hospitalizations, and deaths based 
@@ -145,6 +170,7 @@ ui <- navbarPage(
                     </script >
                     ")),
                  helpText("$y_i = \\beta_1 location_{brooklyn, i} + \\beta_2 location_{bronx, i} + \\beta_3 location_{manhattan, i} + \\beta_4 location_{queens, i} + \\beta_5 location_{staten_island, i} + \\beta_6 violations_i + \\epsilon_i$"),
+                 p("where y represents the number of cases, deaths, or hospitalizations."),
                  br(),
                  h3("Hospitalizations"),
                  fluidRow(
@@ -167,6 +193,18 @@ ui <- navbarPage(
                        of hospitalizations in Manhattan, you would subtract 7 from 21, 
                        and add .45 times the number of social distancing violations reported 
                        that day in Manhattan."),
+                 p("The graph to the right represents the models prediction of 
+                   the hospitalizations per day per borough. The model is 
+                   predicting hospitalizations on 12/18/2020, where there were 
+                   12 social distancing violations in Brooklyn, 10 violations in 
+                   Queens, 8 in Manhattan, 4 in Staten Island, and 3 in the Bronx. 
+                   These violations were chosen based off of the maximum reported 
+                   violations in the respective borough from the month of November. 
+                   It’s clear from this graph, especially in the case of Manhattan, 
+                   that that the number of reported violations impacts the predicted 
+                   value of hospitalizations, which is clear from my model equation as well. 
+                   In this graph, Queens will have the highest hospitalizations with
+                   this input of violations."),
                  br(),
                  h3("Deaths"),
                  fluidRow(
@@ -189,6 +227,16 @@ ui <- navbarPage(
                    a negative number, and add .22 times the number of social distancing 
                    violations reported that day in Manhattan, which will give you a positive
                    number of deaths per day."),
+                 p("The graph to the right represents the models prediction of the 
+                   deaths per day per borough. The model is predicting deaths on 
+                   12/18/2020, where there were 12 social distancing violations in 
+                   Brooklyn, 10 violations in Queens, 8 in Manhattan, 4 in Staten Island, 
+                   and 3 in the Bronx. These violations were chosen based off of 
+                   the maximum reported violations in the respective borough from 
+                   the month of November. Similar to the case of hospitalizations, 
+                   the number of reported violations impacts the predicted value of 
+                   death. In this graph, Queens also will have the highest death 
+                   with this input of violations."),
                  br(),
                  h3("Cases"),
                  fluidRow(
@@ -209,15 +257,45 @@ ui <- navbarPage(
                      To get the predicted number of cases in Manhattan, you would subtract 
                      13 from 128, and add 1.6 times the number of social distancing violations 
                      reported that day in Manhattan."),
+                 p("The graph to the right represents the models prediction of 
+                   the cases per day per borough. The model is predicting cases on 
+                   12/18/2020, where there were 12 social distancing violations 
+                   in Brooklyn, 10 violations in Queens, 8 in Manhattan, 4 in 
+                   Staten Island, and 3 in the Bronx. These violations were chosen 
+                   based off of the maximum reported violations in the respective 
+                   borough from the month of November. Similarly, the number of 
+                   reported violations impacts the predicted value of cases. In 
+                   this graph, Queens also will have the highest cases with this 
+                   input of violations."),
                  ),
              tabPanel("Model Implications",
                  h2("Model Implications", style = "color: darkred"),
-                 p("Making this model is timely as cases are rising in New York.
-                   We can use these predictive models to caution New Yorkers, 
-                   especially in Brooklyn, that an increase in social distancing
-                   violations may serve as a predictor of deaths. However, this model
-                   also demonstrates that social distancing is just one factor
-                   that impacts cases, deaths, and hospitalzations.")
+                 p("This model, as seen from the correlation values, does not fit 
+                   the data as well as possible. This is highly likely because there 
+                   are many important predictive variables missing from the model. 
+                   For example, there are other factors such as comorbidities, age, 
+                   race, and mask wearing habits that can impact case counts, 
+                   hospitalizations, and deaths. Furthermore, the current measure 
+                   of social distancing violations is a reported number and does 
+                   not represent the actual number of social distancing violations 
+                   that occur in each borough. However, this model does provide a 
+                   valuable base upon which to base these future predictive models 
+                   off of, and demonstrates the potential power of such a model 
+                   to inform policies and bring resources to areas that are predicted 
+                   to be severely impacted by COVID-19. For example, the posterior 
+                   distributions demonstrate that if we know the reported social 
+                   distancing, we can predict hospitalizations, deaths, and cases 
+                   of COVID in a borough. Therefore, healthcare institutions can 
+                   funnel that information into a model to better prepare their 
+                   hospitals for a wave of new cases and hospitalizations and 
+                   prevent future deaths – which is something so critical in our 
+                   current second wave. Furthermore, the distribution of various 
+                   311 reports by location can reveal new areas of improvement for 
+                   rightening social distancing restrictions. Having the ability 
+                   to display the data in this format makes it easier to draw conclusions. 
+                   Therefore, while this model is not perfect, there is still much 
+                   to be learned from these conclusions that can be improved upon 
+                   with other sources of data.")
                  ))),
     tabPanel("About",
              includeHTML(rmarkdown::render("about.Rmd"))
