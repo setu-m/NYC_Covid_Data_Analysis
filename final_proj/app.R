@@ -37,13 +37,49 @@ ui <- navbarPage(
                  fluidRow(
                      column(1), column(10,
                                        h2("Background", style = "color: darkred"),
-                                       h4("Placeholder"),
+                                       h4("When the first wave of COVID-19 struck 
+                                          the US, New York City (NYC) was one of 
+                                          the hardest hit regions in the country. 
+                                          Thousands of lives were lives as ICUs were 
+                                          overrun, doctors were overworked, and 
+                                          PPE was scarce. NYC has come a long way 
+                                          since then, maintaining a low infection 
+                                          rate from late September through November. 
+                                          However, NYC has recently seen a huge 
+                                          uptick in cases and spread of COVID-19. 
+                                          In the first week of December, there was 
+                                          an average of 3,078 new cases per day, an
+                                          increase of 70 percent from the average 
+                                          two weeks earlier. Many explain this 
+                                          resurgence of COVID-19 due to a combination 
+                                          of “living room spread” and COVID fatigue. 
+                                          As people become weary of the isolation 
+                                          caused by COVID, they become less cautious, 
+                                          holding small gathering at their homes, 
+                                          unknowingly spreading the virus. With 
+                                          the horrors of the past few months in 
+                                          mind, how can NYC smartly battle this new wave of infections?"),
                                        h2("Project Objectives", style = "color: darkred"),
-                                       h4("Placeholder"),
+                                       h4("In my project, I will explore the links 
+                                          between reported social distancing violations 
+                                          and COVID-19 cases, deaths, and hospitalizations 
+                                          in NYC. I hope these analyses will reveal 
+                                          new predictors for COVID-19 surges that 
+                                          can be used as a red flag to prepare 
+                                          hospital systems with the right resources 
+                                          to treat the incoming surge. "),
                                        h2("Findings", style = "color: darkred"),
-                                       h4("Placeholder"),
-                                       
-                                       br(), br(), br()
+                                       h4("My analysis revealed that there is 
+                                          significant clinical and public health 
+                                          relevance in creating a predictive model 
+                                          for cases, hospitalizations, and deaths 
+                                          due to COVID-19. However, this model 
+                                          requires more information in order to 
+                                          increase its predictive power. COVID-related 
+                                          metrics are informed by not only social 
+                                          distancing violations, but also co-morbidities 
+                                          of the population, location, and age, 
+                                          among other factors. ")
                      )
                  )
              )),      
