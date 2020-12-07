@@ -23,6 +23,9 @@ death_posterior <- readRDS("processed_data/death_posterior.RDS")
 ui <- navbarPage(
     theme = shinytheme("journal"),
     "Going the (Social) Distance in New York City",
+    tabPanel("Abstract"
+        
+    ),
     tabPanel("Data by Category",
              fluidPage(
                  titlePanel("COVID-Factors"),
@@ -35,32 +38,34 @@ ui <- navbarPage(
                              "Chose Cases, Hospitalized, or Death",
                              c("Cases" = "Case", "Hospitalized" = "Hospitalization",
                                "Death" = "Death")
-                         ),
+                                    ),
                          radioButtons(
                              inputId = "selected_variable",            
                              label = "Choose Race, Age, or Sex!",             
                              choices = c("Race", "Age", "Sex")     
-                         ),
-                         p("These plots demonstrate that various boroughs
-                                   have differing trends in regards to deaths, cases,
-                                     and hospitalizations. It's clear that different
-                                     boroughs will need to utilize different approaches
-                                     in treating the ways the COVID-19 surge materializes
-                                     in their borough. For example, the Bronx will need to 
-                                     address the high cases of COVID in their Latino 
-                                     population. Brooklyn will need to address the high hospitalizations
-                                     and death count in their Black population. All counties
-                                     need to protect their elderly, as they are more likely
-                                     to die from COVID. One interesting trend is that Queens 
-                                     has a relatively high rate of hospitalizations in
-                                     people aged 45-64, whose causes should be explored.
-                                     Looking at the data in this way helps us understand
-                                     how to target various interventions specific to each
-                                     trend.")),
-                     mainPanel(plotOutput("age_plots")
-                               ))
+                                     )
+                                    ),
+                     mainPanel(plotOutput("age_plots"))
+                            ),
+                     p("These plots demonstrate that various boroughs
+                        have differing trends in regards to deaths, cases,
+                        and hospitalizations. It's clear that different
+                        boroughs will need to utilize different approaches
+                        in treating the ways the COVID-19 surge materializes
+                        in their borough. For example, the Bronx will need to 
+                        address the high cases of COVID in their Latino 
+                        population. Brooklyn will need to address the high hospitalizations
+                        and death count in their Black population. All counties
+                        need to protect their elderly, as they are more likely
+                        to die from COVID. One interesting trend is that Queens 
+                        has a relatively high rate of hospitalizations in
+                        people aged 45-64, whose causes should be explored.
+                        Looking at the data in this way helps us understand
+                        how to target various interventions specific to each
+                        trend.")
+                               )
                                
-             )),
+                ),
     tabPanel("311 Data",
              tabsetPanel(
                  
@@ -121,7 +126,7 @@ ui <- navbarPage(
                  fluidRow(
                      column(1),
                      column(5, includeHTML("processed_data/hospe_table.html")),
-                     column(5, plotOutput("hosp_posterior"))),
+                     column(5, plotOutput("hosp_posterior", width = 500, height = 500))),
                      br(),
                      p("This model analyses the predictive relationship of location and 
                        reported social distancing violations and hospitalizations per 
@@ -143,7 +148,7 @@ ui <- navbarPage(
                  fluidRow(
                     column(1),
                     column(5, includeHTML("processed_data/death_table.html")),
-                    column(5, plotOutput("death_posterior"))),
+                    column(5, plotOutput("death_posterior", width = 500, height = 500))),
                     br(),
                     p("This model analyses the predictive relationship of location and 
                    reported social distancing violations and death per day per borough. 
@@ -165,7 +170,7 @@ ui <- navbarPage(
                  fluidRow(
                      column(1),
                      column(5, includeHTML("processed_data/case_table.html")),
-                     column(5, plotOutput("case_posterior"))),
+                     column(5, plotOutput("case_posterior", width = 500, height = 500))),
                      br(),
                      p("This model analyses the predictive relationship of location and 
                      reported social distancing violations and cases per day per borough. 
