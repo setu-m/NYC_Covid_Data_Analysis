@@ -9,15 +9,14 @@ library(gganimate)
 
 # Loading in my data
 
-
 age_long <- readRDS("processed_data/age_long.RDS")
 group_three <- readRDS("processed_data/group_three.RDS")
 race_long <- readRDS("processed_data/race_long.RDS")
 sex_long <- readRDS("processed_data/sex_long.RDS")
 joined_data <- readRDS("processed_data/joined_data.RDS")
-
-# Creating an equation for my model
-
+case_posterior <- readRDS("processed_data/case_posterior.RDS")
+hosp_posterior <- readRDS("processed_data/hosp_posterior.RDS")
+death_posterior <- readRDS("processed_data/death_posterior.RDS")
 
 # Beginning the UI
 
@@ -109,20 +108,22 @@ ui <- navbarPage(
                  h2("Model Per Covid Variable",  style = "color: darkred"), 
                  br(),
                  p("The model will be setup according to this specification: "),
-                 withMathJax(),
-                 tags$div(HTML("<script type='text/x-mathjax-config' >
-                MathJax.Hub.Config({
-                tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
-                });
-                </script >
-                ")),
+                     withMathJax(),
+                     tags$div(HTML("<script type='text/x-mathjax-config' >
+                    MathJax.Hub.Config({
+                    tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+                    });
+                    </script >
+                    ")),
                  helpText("$y_i = \\beta_1 location_{brooklyn, i} + \\beta_2 location_{bronx, i} + \\beta_3 location_{manhattan, i} + \\beta_4 location_{queens, i} + \\beta_5 location_{staten_island, i} + \\beta_6 violations_i + \\epsilon_i$"),
                  br(),
                  h3("Hospitalizations"),
                  fluidRow(
                      column(1),
                      column(5, includeHTML("processed_data/hospe_table.html")),
-                     column(5, "This model analyses the predictive relationship of location and 
+                     column(5, plotOutput("hosp_posterior"))),
+                     br(),
+                     p("This model analyses the predictive relationship of location and 
                        reported social distancing violations and hospitalizations per 
                        day per borough. In order to get the value of hospitalizations 
                        per day per borough, you will need to add the beta value for each
@@ -136,13 +137,15 @@ ui <- navbarPage(
                        especially in the case of Manhattan. To get the predicted number 
                        of hospitalizations in Manhattan, you would subtract 7 from 21, 
                        and add .45 times the number of social distancing violations reported 
-                       that day in Manhattan.")),
+                       that day in Manhattan."),
                  br(),
                  h3("Deaths"),
                  fluidRow(
                     column(1),
                     column(5, includeHTML("processed_data/death_table.html")),
-                    column(5, "This model analyses the predictive relationship of location and 
+                    column(5, plotOutput("death_posterior"))),
+                    br(),
+                    p("This model analyses the predictive relationship of location and 
                    reported social distancing violations and death per day per borough. 
                    In order to get the value of deaths per day per borough, you will 
                    need to add the beta value for each borough with .22 times the 
@@ -156,13 +159,15 @@ ui <- navbarPage(
                    of deaths in Manhattan, you would subtract 6.8 from 5.7, which is
                    a negative number, and add .22 times the number of social distancing 
                    violations reported that day in Manhattan, which will give you a positive
-                   number of deaths per day.")),
+                   number of deaths per day."),
                  br(),
                  h3("Cases"),
                  fluidRow(
                      column(1),
                      column(5, includeHTML("processed_data/case_table.html")),
-                     column(5, "This model analyses the predictive relationship of location and 
+                     column(5, plotOutput("case_posterior"))),
+                     br(),
+                     p("This model analyses the predictive relationship of location and 
                      reported social distancing violations and cases per day per borough. 
                      In order to get the value of cases per day per borough, you will 
                      need to add the beta value for each borough with 1.6 times the number 
@@ -174,7 +179,7 @@ ui <- navbarPage(
                      and predicted number of cases, especially in the case of Manhattan. 
                      To get the predicted number of cases in Manhattan, you would subtract 
                      13 from 128, and add 1.6 times the number of social distancing violations 
-                     reported that day in Manhattan.")),
+                     reported that day in Manhattan."),
                  ),
              tabPanel("Model Implications",
                  h2("Model Implications", style = "color: darkred"),
@@ -215,8 +220,17 @@ server <- function(input, output) {
                                            "#f9e9ec", "#f88dad"))
         
     })
-    output$three <- renderPlot({group_three})
-            
+   
+# Generating the social distancing per location plot
+     
+      output$three <- renderPlot({group_three})
+      
+# Generating the posterior distributions of cases, hospitalizations, and deaths 
+
+      output$hosp_posterior <- renderPlot({hosp_posterior})
+      output$case_posterior <- renderPlot({case_posterior})
+      output$death_posterior <- renderPlot({death_posterior})
+      
 # Plots the gif of New York City Violations
     
     output$NYC <- renderImage({
@@ -230,5 +244,7 @@ server <- function(input, output) {
              # alt = "This is alternate text"
         )}, deleteFile = FALSE)
 }
+
+# Run the application
 
 shinyApp(ui, server)

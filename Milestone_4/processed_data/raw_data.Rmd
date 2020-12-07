@@ -386,15 +386,108 @@ recent <- read_csv("../Data/Recent.csv",
   group_by(created_date, borough) %>%
   summarize(count = n(), .groups = "drop") %>%
   arrange(desc(count))
+
+# This analysis gave me the highest number of recorded social distancing
+# violations per borough on a single day in November. For Brooklyn it was 12,
+# for Queens it was 10, Manhattan it was 8, for Staten Island it was 4, and for
+# the Bronx it was 3. I will use these numbers as realistic inputs for my
+# posterior distributions of the predicted cases, hospitalizations, and deaths
+# per borough.
                                    
   group_by(location_type, borough) %>%
   filter(borough != "Unspecified") %>%
   summarize(count = n(), .groups = "drop") 
 
+# Creating a test tibble for using posterior_epred; which I would like to use to
+# get a predicted value for the whole population.
 
-
-test_data <- tibble(date = c(rep("12/13/2020"), 4),
+test_data <- tibble(date = c(rep("12/13/2020", 5)),
                     location = c("BK", "BX", "MN", "SI", "QN"),
-                    violations = c(71, 14))
+                    violations = c(12, 3, 8, 4, 10))
+
+# Making a posterior distribution for case prediction per county
+
+case_post <- posterior_epred(fit_case, newdata = test_data) %>% 
+  as_tibble() %>% 
+  mutate_all(as.numeric) %>%
+  rename("Brooklyn" = `1`, 
+         "Bronx" = `2`,
+         "Manhattan" = `3`,
+         "Staten Island" = `4`,
+         "Queens" = `5`) %>%
+  pivot_longer(names_to = "Borough",
+               values_to = "casepred",
+               cols = everything()) %>%
+  ggplot(aes(casepred)) +
+  geom_histogram(aes(y = after_stat(count/sum(count)),
+                     fill = Borough),
+                 bins = 100, 
+                 color = "white",
+                 alpha = 0.6,
+                 position = "identity") +
+  theme_bw() +
+  labs(title = "Predictions of Cases per Day per Borough",
+       subtitle = "Predicted for 12/18/2020 with the social distancing violation \n numbers -- Brooklyn: 12, Queens: 10, Manhattan: 8, \n Staten Island: 4, Bronx: 3",
+       x = "Cases",
+       y = "Proportion")
+
+saveRDS(case_post, file = "case_posterior.RDS")
+
+# Making a posterior distribution for death prediction per county
+
+death_post <- posterior_epred(fit_death, newdata = test_data) %>% 
+  as_tibble() %>% 
+  mutate_all(as.numeric) %>%
+  rename("Brooklyn" = `1`, 
+         "Bronx" = `2`,
+         "Manhattan" = `3`,
+         "Staten Island" = `4`,
+         "Queens" = `5`) %>%
+  pivot_longer(names_to = "Borough",
+               values_to = "casepred",
+               cols = everything()) %>%
+  ggplot(aes(casepred)) +
+  geom_histogram(aes(y = after_stat(count/sum(count)),
+                     fill = Borough),
+                 bins = 100, 
+                 color = "white",
+                 alpha = 0.6,
+                 position = "identity") +
+  theme_bw() +
+  labs(title = "Predictions of Deaths per Day per Borough",
+       subtitle = "Predicted for 12/18/2020 with the social distancing violation \n numbers -- Brooklyn: 12, Queens: 10, Manhattan: 8, \n Staten Island: 4, Bronx: 3",
+       x = "Deaths",
+       y = "Proportion")
+
+saveRDS(death_post, file = "death_posterior.RDS")
+
+# Making a posterior distribution for hospitalizations predictions per county
+
+hosp_post <- posterior_epred(fit_hosp, newdata = test_data) %>% 
+  as_tibble() %>% 
+  mutate_all(as.numeric) %>%
+  rename("Brooklyn" = `1`, 
+         "Bronx" = `2`,
+         "Manhattan" = `3`,
+         "Staten Island" = `4`,
+         "Queens" = `5`) %>%
+  pivot_longer(names_to = "Borough",
+               values_to = "casepred",
+               cols = everything()) %>%
+  ggplot(aes(casepred)) +
+  geom_histogram(aes(y = after_stat(count/sum(count)),
+                     fill = Borough),
+                 bins = 100, 
+                 color = "white",
+                 alpha = 0.6,
+                 position = "identity") +
+  theme_bw() +
+  labs(title = "Predictions of Hospitalizations per Day per Borough",
+       subtitle = "Predicted for 12/18/2020 with the social distancing violation \n numbers -- Brooklyn: 12, Queens: 10, Manhattan: 8, \n Staten Island: 4, Bronx: 3",
+       x = "Hospitalizations",
+       y = "Proportion")
+
+saveRDS(hosp_post, file = "hosp_posterior.RDS")
+
 ```
 
