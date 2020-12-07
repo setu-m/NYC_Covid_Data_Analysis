@@ -74,6 +74,9 @@ ui <- navbarPage(
                  tabPanel("311 Graphs",
                           plotOutput("three")
                  ),
+                 
+                 # 2nd tab: Gif of Mapped Social Distancing Violations
+                 
                  tabPanel("311 Map",
                           br(),
                           column(5, "This is an animated image that plots the location 
@@ -217,7 +220,7 @@ server <- function(input, output) {
                      labs(
                           x = paste0(input$selected_variable),
                           y = "Count") +
-                     scale_fill_manual(name = "County",
+                     scale_fill_manual(name = "Borough",
                                        breaks = c("BK", "BX", "MN", "QN", "SI"),
                                        labels = c("Brooklyn", "Bronx", "Manhattan",
                                                    "Queens", "Staten Island"),
