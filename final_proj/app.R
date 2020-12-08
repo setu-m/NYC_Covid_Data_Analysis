@@ -38,9 +38,9 @@ ui <- navbarPage(
                      column(1), column(10,
                                        h2("Background", style = "color: darkred"),
                                        h4("When the first wave of COVID-19 struck 
-                                          the US, New York City (NYC) was one of 
+                                          the US, New York City -NYC- was one of 
                                           the hardest hit regions in the country. 
-                                          Thousands of lives were lives as ICUs were 
+                                          Thousands of lives were lost as ICUs were 
                                           overrun, doctors were overworked, and 
                                           PPE was scarce. NYC has come a long way 
                                           since then, maintaining a low infection 
@@ -73,13 +73,19 @@ ui <- navbarPage(
                                           significant clinical and public health 
                                           relevance in creating a predictive model 
                                           for cases, hospitalizations, and deaths 
-                                          due to COVID-19. However, this model 
+                                          due to COVID-19. One of the most important
+                                          findings was that social distancing
+                                          violations are severly underreported,
+                                          especially in the case of living room
+                                          spread. This makes it difficult for a model
+                                          to take in solely the 311 recorded
+                                          violations. This model 
                                           requires more information in order to 
                                           increase its predictive power. COVID-related 
                                           metrics are informed by not only social 
-                                          distancing violations, but also co-morbidities 
+                                          distancing violations, but also by co-morbidities 
                                           of the population, location, and age, 
-                                          among other factors. ")
+                                          among other factors.")
                      )
                  )
              )),      
@@ -158,14 +164,14 @@ ui <- navbarPage(
                           of social distancing violations per location type. It is 
                           clear from this image that there is a wide distribution
                           of violations throughout the city, with most of
-                          the violations occuring at residential locations.
+                          the violations occuring at indoor locations.
                           This trend is crucial in supporting the idea 
                           that living room spread is a dangerous spreader of COVID-19,
                           which occured in this past wave of COVID."),
                           column(5, imageOutput("NYC", height = "100%"))
              ))),
     
-    # Tab describing componenets of my model
+    # Tab describing components of my model
     
     tabPanel("Model",
              tabsetPanel(
@@ -177,27 +183,29 @@ ui <- navbarPage(
                  br(),
                  p("I chose to utilize a standard gaussian model to predict
                    the number of cases, hospitalizations, and deaths based 
-                   upon the predictors of location, and social distancing 
+                   upon the predictors of location, and reported social distancing 
                    violations. Ultimately, I wanted to see if there was a linear
                    correlation between social distancing violation counts 
                    and hospitalizations, deaths, and cases in each borough. 
                    In order to see if there is a true linear correlation, 
-                   I calculated the linear correlations between each variables,
+                   I calculated the linear correlations between each variable,
                    displayed in the table here."),
                  br(),
+                 
+                 # Displays the correlation table
+                 
                  h3("Correlation Table"),
                  fluidRow(
                      includeHTML("processed_data/joined_table1.html")),
                  br(),
-                 p("As I fit my model, I wanted to investigate the correlations between
-                   the variables, and the strength of their linear correlation. 
+                 p("As I fit my model, I wanted to investigate the strength of the linear correlation
+                   between social distancing violations and cases, deaths, and hospitalizations.
                    I noticed that there are not very strong correlations between the
-                   three variables and social distancing violations. However, 
-                   the strongest correlations exist between social distancing
+                   three variables and social distancing violations. The strongest correlations exist between social distancing
                    violations and death."),
                  h2("Model Per Covid Variable",  style = "color: darkred"), 
                  br(),
-                 p("The model will be setup according to this specification: "),
+                 p("The model was created according to this equation: "),
                      withMathJax(),
                      tags$div(HTML("<script type='text/x-mathjax-config' >
                     MathJax.Hub.Config({
@@ -205,9 +213,12 @@ ui <- navbarPage(
                     });
                     </script >
                     ")),
-                 helpText("$y_i = \\beta_1 location_{brooklyn, i} + \\beta_2 location_{bronx, i} + \\beta_3 location_{manhattan, i} + \\beta_4 location_{queens, i} + \\beta_5 location_{staten_island, i} + \\beta_6 violations_i + \\epsilon_i$"),
+                 helpText("$y_i = \\beta_1 location_{brooklyn, i} + \\beta_2 location_{bronx, i} + \\beta_3 location_{manhattan, i} + \\beta_4 location_{queens, i} + \\beta_5 location_{staten-island, i} + \\beta_6 violations_i + \\epsilon_i$"),
                  p("where y represents the number of cases, deaths, or hospitalizations."),
                  br(),
+                 
+                 # Displays the hospitalization model
+                 
                  h3("Hospitalizations"),
                  fluidRow(
                      column(1),
@@ -215,20 +226,22 @@ ui <- navbarPage(
                      column(5, plotOutput("hosp_posterior", width = 500, height = 500))),
                      br(),
                      p("This model analyses the predictive relationship of location and 
-                       reported social distancing violations and hospitalizations per 
+                       reported social distancing violations on hospitalizations per 
                        day per borough. In order to get the value of hospitalizations 
-                       per day per borough, you will need to add the beta value for each
+                       per day per borough, you will need to add the beta value for that
                        borough with .45 times the number of social distancing violations 
-                       reported in that county. The baseline value of hospitalizations is
-                       in Brooklyn, of 21 hospitalizations per day, and you would add 
-                       .45 times the number of social distancing violations to get the 
+                       reported in that borough. The baseline value of hospitalizations is
+                       in Brooklyn, of 20 hospitalizations per day, and you would add 
+                       .45 times the number of social distancing violations that day to get the 
                        total predicted number of hospitalizations per day in Brooklyn. 
-                       This model is interesting in that interaction between social 
+                       This model is interesting as it contextualizes the relationship between social 
                        distancing violations and predicted number of hospitalizations, 
                        especially in the case of Manhattan. To get the predicted number 
-                       of hospitalizations in Manhattan, you would subtract 7 from 21, 
+                       of hospitalizations in Manhattan, you would subtract 7 from 20, 
                        and add .45 times the number of social distancing violations reported 
-                       that day in Manhattan."),
+                       that day in Manhattan. The prediction will be positive if there is 
+                       a large enough number of reported violations. This often doesn't
+                       happen because living room spread is underreported."),
                  p("The graph to the right represents the models prediction of 
                    the hospitalizations per day per borough. The model is 
                    predicting hospitalizations on 12/18/2020, where there were 
@@ -242,6 +255,9 @@ ui <- navbarPage(
                    In this graph, Queens will have the highest hospitalizations with
                    this input of violations."),
                  br(),
+                 
+                 # Displays the death model
+                 
                  h3("Deaths"),
                  fluidRow(
                     column(1),
@@ -249,19 +265,20 @@ ui <- navbarPage(
                     column(5, plotOutput("death_posterior", width = 500, height = 500))),
                     br(),
                     p("This model analyses the predictive relationship of location and 
-                   reported social distancing violations and death per day per borough. 
+                   reported social distancing violations on death per day per borough. 
                    In order to get the value of deaths per day per borough, you will 
                    need to add the beta value for each borough with .22 times the 
-                   number of social distancing violations reported in that county. 
-                   The baseline value of deaths is in Brooklyn, of 5.7 deaths per day, 
+                   number of social distancing violations reported in that borough. 
+                   The baseline value of deaths is in Brooklyn, of 5.5 deaths per day, 
                    and you would add .22 times the number of social distancing violations
                    to get the total predicted number of deaths per day in Brooklyn. 
                    Once again, this model is interesting in that interaction between 
                    social distancing violations and predicted number of deaths, 
                    especially in the case of Manhattan. To get the predicted number 
-                   of deaths in Manhattan, you would subtract 6.8 from 5.7, which is
+                   of deaths in Manhattan, you would subtract 6.8 from 5.5, which is
                    a negative number, and add .22 times the number of social distancing 
-                   violations reported that day in Manhattan, which will give you a positive
+                   violations reported that day in Manhattan, which will, dependent
+                   on the number of violations, will give you a positive
                    number of deaths per day."),
                  p("The graph to the right represents the models prediction of the 
                    deaths per day per borough. The model is predicting deaths on 
@@ -274,6 +291,9 @@ ui <- navbarPage(
                    death. In this graph, Queens also will have the highest death 
                    with this input of violations."),
                  br(),
+                 
+                 # Displays the cases model
+                 
                  h3("Cases"),
                  fluidRow(
                      column(1),
@@ -281,17 +301,17 @@ ui <- navbarPage(
                      column(5, plotOutput("case_posterior", width = 500, height = 500))),
                      br(),
                      p("This model analyses the predictive relationship of location and 
-                     reported social distancing violations and cases per day per borough. 
+                     reported social distancing violations on cases per day per borough. 
                      In order to get the value of cases per day per borough, you will 
                      need to add the beta value for each borough with 1.6 times the number 
-                     of social distancing violations reported in that county. The baseline 
+                     of social distancing violations reported in that borough. The baseline 
                      value of cases is in Brooklyn, of 128 cases per day, and you would add 
                      1.6 times the number of social distancing violations to get the total 
                      predicted number of cases per day in Brooklyn. Once again, this model 
                      is interesting in that interaction between social distancing violations 
                      and predicted number of cases, especially in the case of Manhattan. 
                      To get the predicted number of cases in Manhattan, you would subtract 
-                     13 from 128, and add 1.6 times the number of social distancing violations 
+                     12 from 128, and add 1.6 times the number of social distancing violations 
                      reported that day in Manhattan."),
                  p("The graph to the right represents the models prediction of 
                    the cases per day per borough. The model is predicting cases on 
@@ -304,7 +324,10 @@ ui <- navbarPage(
                    this graph, Queens also will have the highest cases with this 
                    input of violations."),
                  ),
-             tabPanel("Model Implications",
+             
+               # This tab talks about the implications of my model
+               
+               tabPanel("Model Implications",
                  h2("Model Implications", style = "color: darkred"),
                  p("This model, as seen from the correlation values, does not fit 
                    the data as well as possible. This is highly likely because there 
@@ -315,7 +338,7 @@ ui <- navbarPage(
                    of social distancing violations is a reported number and does 
                    not represent the actual number of social distancing violations 
                    that occur in each borough. However, this model does provide a 
-                   valuable base upon which to base these future predictive models 
+                   valuable base upon which to model these future predictive models 
                    off of, and demonstrates the potential power of such a model 
                    to inform policies and bring resources to areas that are predicted 
                    to be severely impacted by COVID-19. For example, the posterior 
@@ -327,12 +350,15 @@ ui <- navbarPage(
                    prevent future deaths – which is something so critical in our 
                    current second wave. Furthermore, the distribution of various 
                    311 reports by location can reveal new areas of improvement for 
-                   rightening social distancing restrictions. Having the ability 
+                   tightening social distancing restrictions. Having the ability 
                    to display the data in this format makes it easier to draw conclusions. 
                    Therefore, while this model is not perfect, there is still much 
                    to be learned from these conclusions that can be improved upon 
                    with other sources of data.")
                  ))),
+    
+    # My about tab with other information
+    
     tabPanel("About",
              includeHTML(rmarkdown::render("about.Rmd"))
              ))

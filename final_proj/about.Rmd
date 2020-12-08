@@ -13,7 +13,7 @@ I first became interested in studying trends regarding social distancing violati
 
 ## Information about data
 My code can be found here: <https://github.com/setu-m/NYC_Covid_Data_Analysis>.
-I downloaded the NYC COVID-19 data containing hospitalizations, deaths, and cases per NYC borough on 10-14-2020 used for my model from <https://github.com/nychealth/coronavirus-data>. This data further specifies information by race, age, and sex. I downloaded the 311 violations data from the NYC website used for my model on 10-14-2020 from <https://data.cityofnewyork.us/Social-Services/Social-Distancing-Violation-Reports-Mapped/jdvc-m64z>. I downloaded a filtered dataset from this site that just had social distancing violations in the past year.  
+I downloaded the NYC COVID-19 data used for my model containing hospitalizations, deaths, and cases per NYC borough on 10-14-2020 from <https://github.com/nychealth/coronavirus-data>. This data further specifies information by race, age, and sex. I downloaded the 311 violations data from the NYC website used for my model on 10-14-2020 from <https://data.cityofnewyork.us/Social-Services/Social-Distancing-Violation-Reports-Mapped/jdvc-m64z>. I downloaded a filtered dataset from this site that just had social distancing violations in the past year.  
 
 
 ## About Me
