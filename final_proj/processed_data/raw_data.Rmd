@@ -52,7 +52,9 @@ saveRDS(age_long, file = "age_long.RDS")
 
 ```
 
-```{r race, echo = FALSE}
+```{r sex, echo = FALSE}
+
+# Following the same protocol to wrangle the sex dataset
 
 sex <- read_csv("../Data/boroughs-by-sex.csv",
       col_types = cols(.default = col_double(),
@@ -73,6 +75,8 @@ saveRDS(sex_long, file = "sex_long.RDS")
 ```
 
 ```{r race}
+
+# Following the same protocol to wrangle the race dataset
 
 race <- read_csv("../Data/boroughs-by-race.csv",
       col_types = cols(.default = col_double(),
@@ -125,6 +129,8 @@ saveRDS(joined_data, file = "joined_data.RDS")
 
 ```{r 311_requests, echo = FALSE}
 
+# Here I manipulate the 311 data for creating my bar graph.
+
 three <- read_csv("../Data/311_Service_Requests_from_2010_to_Present.csv", col_types = cols(
   .default = col_character(),
   `Unique Key` = col_double(),
@@ -160,7 +166,10 @@ group_three <- three %>%
                           location_type == "Street/Sidewalk" ~ "Street",
                           location_type == "Street/Curbside" ~ "Street",
                           TRUE ~ location_type)) %>%
-                                   
+  
+  # Here I needed to use a case_when to combine the similar subcategories
+  # present in the data.
+  
   group_by(location_type, borough) %>%
   filter(borough != "Unspecified") %>%
   summarize(count = n(), .groups = "drop") %>%
@@ -180,7 +189,7 @@ saveRDS(group_three, file = "group_three.RDS")
 
 ```{r model}
 
-# Here I make the dataset that I will use for my model. I am relying on the
+# Here I first make the dataset that I will use for my model. I am relying on the
 # granular data provided by the NYC data so I can have a greater power of my
 # study and am going to wrangle it such that I can predict cases,
 # hospitalizations, and deaths on borough.
@@ -267,7 +276,7 @@ daily_counts <- three %>%
          location = borough)
 
 # This will summarize the number of social distancing violation counts per day
-# per county for merging with the other dataset.
+# per borough for merging with the other dataset.
 
 new_join <- inner_join(join, daily_counts, by = c("date", "location")) %>%
   drop_na()
@@ -299,7 +308,7 @@ new_join <- inner_join(join, daily_counts, by = c("date", "location")) %>%
 
 gtsave(correlations, filename = "joined_table1.html")
 
-# Making a model for predicting cases
+# Making a model + table for predicting cases
 
 fit_case <- stan_glm(data = new_join,
                 case_count ~ location + violations - 1,
@@ -310,11 +319,11 @@ case_table <- fit_case %>%
   tbl_regression() %>%
   as_gt() %>%
   tab_header(title = md("**Regression of Covid-19 Case Counts**"),
-             subtitle = "The Effect of Location and Social Distancing Violations on Covid-19 Case Counts") 
+             subtitle = "Using Location and Social Distancing Violations to Predict Covid-19 Case Counts") 
 
 gtsave(case_table, filename = "case_table.html")
 
-# Making a model for predicting hospitalizations
+# Making a model + table for predicting hospitalizations
 
 fit_hosp <- stan_glm(data = new_join,
                 hospitalized_count ~ location + violations - 1,
@@ -324,11 +333,11 @@ hosp_table <- fit_hosp %>%
   tbl_regression() %>%
   as_gt() %>%
   tab_header(title = md("**Regression of Covid-19 Hospitalizations**"),
-             subtitle = "The Effect of Location and Social Distancing Violations on Covid-19 Hospitalizations") 
+             subtitle = "Using Location and Social Distancing Violations to Predict Covid-19 Hospitalizations") 
 
 gtsave(hosp_table, filename = "hospe_table.html")
 
-# Making a model for predicting deaths
+# Making a model + table for predicting deaths
 
 fit_death <- stan_glm(data = new_join,
                 death_count ~ location + violations - 1,
@@ -338,7 +347,7 @@ death_table <- fit_death %>%
   tbl_regression() %>%
   as_gt() %>%
   tab_header(title = md("**Regression of Covid-19 Deaths**"),
-             subtitle = "The Effect of Location and Social Distancing Violations on Covid-19 Deaths") 
+             subtitle = "Using Location and Social Distancing Violations to Predict Covid-19 Deaths") 
 
 gtsave(death_table, filename = "death_table.html")
 
@@ -356,7 +365,7 @@ gtsave(death_table, filename = "death_table.html")
 # information per borough and will pull the highest number per borough to feed
 # through a posterior_epred function.
 
-# Reading in the November sociali distancing data
+# Reading in the November social distancing data
 
 recent <- read_csv("../Data/Recent.csv",
                    col_types = cols(
@@ -405,7 +414,7 @@ test_data <- tibble(date = c(rep("12/13/2020", 5)),
                     location = c("BK", "BX", "MN", "SI", "QN"),
                     violations = c(12, 3, 8, 4, 10))
 
-# Making a posterior distribution for case prediction per county
+# Making a posterior distribution for case prediction per borough
 
 case_post <- posterior_epred(fit_case, newdata = test_data) %>% 
   as_tibble() %>% 
@@ -433,7 +442,7 @@ case_post <- posterior_epred(fit_case, newdata = test_data) %>%
 
 saveRDS(case_post, file = "case_posterior.RDS")
 
-# Making a posterior distribution for death prediction per county
+# Making a posterior distribution for death prediction per borough
 
 death_post <- posterior_epred(fit_death, newdata = test_data) %>% 
   as_tibble() %>% 
@@ -461,7 +470,7 @@ death_post <- posterior_epred(fit_death, newdata = test_data) %>%
 
 saveRDS(death_post, file = "death_posterior.RDS")
 
-# Making a posterior distribution for hospitalizations predictions per county
+# Making a posterior distribution for hospitalizations predictions per borough
 
 hosp_post <- posterior_epred(fit_hosp, newdata = test_data) %>% 
   as_tibble() %>% 
