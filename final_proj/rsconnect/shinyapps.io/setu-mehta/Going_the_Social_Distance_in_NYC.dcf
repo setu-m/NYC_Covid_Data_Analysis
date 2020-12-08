@@ -5,8 +5,8 @@ account: setu-mehta
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 3362424
-bundleId: 3958518
+bundleId: 3958587
 url: https://setu-mehta.shinyapps.io/Going_the_Social_Distance_in_NYC/
-when: 1607403539.50789
+when: 1607404902.88369
 asMultiple: FALSE
 asStatic: FALSE
