@@ -119,7 +119,10 @@ ui <- navbarPage(
                             ),
                      p("These plots demonstrate that various boroughs
                         have differing trends in regards to deaths, cases,
-                        and hospitalizations. It's clear that different
+                        and hospitalizations. The displayed data is the cumulative
+                        raw counts of deaths, cases, and hospitalizations per
+                        borough measured until 10/14/2020; when I downloaded the
+                        data. It's clear that different
                         boroughs will need to utilize different approaches
                         in treating the ways the COVID-19 surge materializes
                         in their borough. For example, the Bronx will need to 
@@ -151,8 +154,9 @@ ui <- navbarPage(
                              for violations throughout each borough. This data can serve
                              as a partial justification for why legislation has focused on
                              shutting down non-essential businesses. However, we must keep
-                             in mind the unreported social distancing violations, of which
-                             violations in residential buildings are the culprit for this
+                             in mind unreported social distancing violations, of which
+                             violations in residential buildings have been implicated
+                             in various other research investigations as the culprit for this
                              most recent wave of COVID.")
                           ),
                  
@@ -166,7 +170,7 @@ ui <- navbarPage(
                           of violations throughout the city, with most of
                           the violations occuring at indoor locations.
                           This trend is crucial in supporting the idea 
-                          that living room spread is a dangerous spreader of COVID-19,
+                          that indoor gatherings can be a dangerous spreader of COVID-19,
                           which occured in this past wave of COVID."),
                           column(5, imageOutput("NYC", height = "100%"))
              ))),
@@ -231,13 +235,13 @@ ui <- navbarPage(
                        per day per borough, you will need to add the beta value for that
                        borough with .45 times the number of social distancing violations 
                        reported in that borough. The baseline value of hospitalizations is
-                       in Brooklyn, of 20 hospitalizations per day, and you would add 
+                       in Brooklyn, of 21 hospitalizations per day, and you would add 
                        .45 times the number of social distancing violations that day to get the 
                        total predicted number of hospitalizations per day in Brooklyn. 
                        This model is interesting as it contextualizes the relationship between social 
                        distancing violations and predicted number of hospitalizations, 
                        especially in the case of Manhattan. To get the predicted number 
-                       of hospitalizations in Manhattan, you would subtract 7 from 20, 
+                       of hospitalizations in Manhattan, you would subtract 6.8 from 21, 
                        and add .45 times the number of social distancing violations reported 
                        that day in Manhattan. The prediction will be positive if there is 
                        a large enough number of reported violations. This often doesn't
@@ -269,13 +273,13 @@ ui <- navbarPage(
                    In order to get the value of deaths per day per borough, you will 
                    need to add the beta value for each borough with .22 times the 
                    number of social distancing violations reported in that borough. 
-                   The baseline value of deaths is in Brooklyn, of 5.5 deaths per day, 
+                   The baseline value of deaths is in Brooklyn, of 5.6 deaths per day, 
                    and you would add .22 times the number of social distancing violations
                    to get the total predicted number of deaths per day in Brooklyn. 
                    Once again, this model is interesting in that interaction between 
                    social distancing violations and predicted number of deaths, 
                    especially in the case of Manhattan. To get the predicted number 
-                   of deaths in Manhattan, you would subtract 6.8 from 5.5, which is
+                   of deaths in Manhattan, you would subtract 6.7 from 5.6, which is
                    a negative number, and add .22 times the number of social distancing 
                    violations reported that day in Manhattan, which will, dependent
                    on the number of violations, will give you a positive
